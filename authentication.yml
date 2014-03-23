@@ -1,0 +1,9 @@
+---
+- name         : Linux User Managment 
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  vars_files : 
+    - "vars/usersdb.yml"
+  roles:
+    - ansible-authentication

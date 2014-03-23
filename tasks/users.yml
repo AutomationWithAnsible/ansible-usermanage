@@ -1,0 +1,37 @@
+---
+
+    - name: Debug Users /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
+      template: 
+         src=debug_users.j2
+         dest="/tmp/debugUser.{{inventory_hostname}}-{{item.account}}"
+      when: "UsersDebug == 1"
+      with_items: ServerAccess
+      tags: linux_users
+
+    - name: Manage Linux Users accounts
+      user: 
+        name="{{item.account}}"
+        state="{{'absent' if 'delete' in LinuxUsers[item.account] else item.state if item.state is defined else defaultState}}"
+        comment="{{LinuxUsers[item.account].fullname if LinuxUsers[item.account].fullname is defined else ""}}"
+        groups="{% if item.groups is defined %}{{item.groups}}{% endif %}"
+        shell={{item.shell if item.shell is defined else defaultShell}}
+        remove={{item.remove if item.remove is defined else defaultRemove}}
+        force=yes
+        append=True
+      with_items: ServerAccess
+      tags: linux_users
+
+    - name: Mange authorized_keys for multi access to same user
+      authorized_key: 
+         user="{{item.0.account}}"
+         state="{{'absent' if 'delete' in LinuxUsers[item.0.account] else item.1.state if item.1.state is defined else defaultState}}"
+         key="{{LinuxUsers[item.1.user].pubkey}}"
+         manage_dir="yes"
+         key_options="{{item.1.key_options if item.1.key_options is defined else ''}}"
+      with_subelements:
+          - ServerAccess 
+          - userkeys 
+      register: keyrc
+      tags: linux_users
+      failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
+

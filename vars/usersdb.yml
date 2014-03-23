@@ -1,0 +1,42 @@
+##
+## User DB
+##
+
+## I chose to use a flat file but you can use any source to be your userdb (ldap, sql server whatever)
+## For more info look at http://docs.ansible.com/developing_plugins.html#vars-plugins
+
+defaultShell : "/bin/bash"
+defaultState : "present"
+defaultRemove: "yes"
+
+## WARNING Debug will deploy a text file on target server and dumps variable file
+## /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
+## if you want to use debug use the limit to one server than delete the tempfile 
+## for more info look at the debug users task in the play book
+UsersDebug : 0
+
+##
+## Database for user
+##    fullname: User descripition (required)
+##    pubkey: ssh key for a user (required)
+##    delete: Global delete (optional)
+##           (if defined will override state of host/group var)
+
+## Test users
+LinuxUsers:
+    daniels:
+        fullname : 'Jack daniels'
+        pubkey   : 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCootXD63hexEQnbCmKGC7DjFSWxkqJ2neaC5S6POEdgwo7jQ60JWy0VCm5JS5d2ZNDQh+vi1wZ2cTr6n9X9bAkYhQ/eACmzYBjf8I8AXcqaigAOjRMLADU2qQfZmnRGyOLaGDI/EH52yBjeZHbgQdJOGrB07qgAu2facA2bd6kvI8eLwCx5yjqA+mInYEewRYrr5tUduGFdPhmyoKSGpaEeWWkLhafTj9eGRMSB3unBcMtux+LxXH4TfWgVBmWNVbr2Mcv+M6tYxix/iKniBLBUH/AfM/dTHlk38y2mjemUMUc/HBW+HmH3NXMwOks8po6Iohh8JNhywUlLKN9MvB7'
+#       delete   : 
+
+    stewart:
+        fullname : 'Daniel Stewart'
+        pubkey   : 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhiDPE4S4K6AGJFRSIB5xVoIlKtgjVUVHK1WhT0hD/I3nZ3AFszqDXUz4eREDlPSfMsvNCuAd1Mxwg2vx1Udbzf0M5OH1DDgYyVeJXXB5/B2rpX7vm0A1Hxx17mMHg9OrCNKNn8B83g6IqAGM6P3VKHqnRQ9kLpPcki65gMx06R2dQ1Dh5kks2yOjyx7Mjut0rL9Ig/b9ysMMC1YjMupC8vb31Dhy8pVi1F/RT/7M6PwM4Kjh3fdzgqvQRxDrmky8kbXJj+TXU6pIM1mZtZyENddUCA0rDNtpi6yIaAR9aJkcPXxPpblkWjYAO++sukz88BKWt0Z+nLx9JUhwXtoW7'
+
+    ops:
+        fullname : 'Operation Account'
+        pubkey   : 'ssh-rsa AAAAB3NzaC1AAyc2EAADAQBAAAABAQCootXD63hexEQnbCmKGC7DjFSWxkqJ2neaC5S6POEdgwo7jQ60JWy0VCm5JS5d2ZNDQh+vi1wZ2cTr6n9X9bAkYhQ/eACmzYBjf8I8AXcqaigAOjRMLADU2qQfZmnRGyOLaGDI/EH52yBjeZHbgQdJOGrB07qgAu2facA2bd6kvI8eLwCx5yjqA+mInYEewRYrr5tUduGFdPhmyoKSGpaEeWWkLhafTj9eGRMSB3unBcMtux+LxXH4TfWgVBmWNVbr2Mcv+M6tYxix/iKniBLBUH/AfM/dTHlk38y2mjemUMUc/HBW+HmH3NXMwOks8po6Iohh8JNhywUlLKN9MvB7'
+
+    testuser:
+        fullname : 'testuser'
+        pubkey   : 'ssh-rsa AAAAB3NzaC2EAA1ycAADAAAQABABAQCootXD63hexEQnbCmKGC7DjFSWxkqJ2neaC5S6POEdgwo7jQ60JWy0VCm5JS5d2ZNDQh+vi1wZ2cTr6n9X9bAkYhQ/eACmzYBjf8I8AXcqaigAOjRMLADU2qQfZmnRGyOLaGDI/EH52yBjeZHbgQdJOGrB07qgAu2facA2bd6kvI8eLwCx5yjqA+mInYEewRYrr5tUduGFdPhmyoKSGpaEeWWkLhafTj9eGRMSB3unBcMtux+LxXH4TfWgVBmWNVbr2Mcv+M6tYxix/iKniBLBUH/AfM/dTHlk38y2mjemUMUc/HBW+HmH3NXMwOks8po6Iohh8JNhywUlLKN9MvB7'        

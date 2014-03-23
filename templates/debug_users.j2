@@ -1,0 +1,33 @@
+inventory_hostname= {{inventory_hostname}}
+------------------------------------------
+
+Global Users Info
+-----------------
+name     : {{item.account}}
+fullname : {{LinuxUsers[item.account].fullname}}
+Pubkey   : {{LinuxUsers[item.account].pubkey}} 
+
+
+Server Info
+-----------
+host 	    : {{inventory_hostname}}
+groups      : {{item.groups}}
+state       : {{item.state if item.state is defined else defaultState}}
+remove      : {{item.remove if item.remove is defined else defaultRemove}}
+shell       : {{item.shell if item.shell is defined else defaultShell }}
+key_options : {{item.key_options if item.key_options is defined else "" }}
+
+-------
+KeyAccess:
+
+{% if item.userkeys is defined %}
+Keys:
+	{% for key in item.userkeys  %}
+----> {{ key }}
+	{% endfor %}
+{% else %}
+No Keys
+{% endif %}
+ 
+ 
+ 	
