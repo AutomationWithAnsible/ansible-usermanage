@@ -67,8 +67,8 @@ ServerAccess:
 
 # TODO
 Currently the playbook serves my needs, but I it lacks some features
+
 1. Add support for unix group management 
 2. Shadow password support
 3. Support multiple user files
-4. Better check
-    * Check with_subelements  (userkeys) if user has no ssh key
+4. Syntax check with_subelements (userkeys) if user has no ssh key
