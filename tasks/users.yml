@@ -6,20 +6,18 @@
          dest="/tmp/debugUser.{{inventory_hostname}}-{{item.account}}"
       when: "UsersDebug == 1"
       with_items: ServerAccess
-      tags: linux_users
 
     - name: Manage Linux Users accounts
       user: 
-        name="{{item.account}}"
-        state="{{'absent' if 'delete' in LinuxUsers[item.account] else item.state if item.state is defined else defaultState}}"
-        comment="{{LinuxUsers[item.account].fullname if LinuxUsers[item.account].fullname is defined else ""}}"
-        groups="{% if item.groups is defined %}{{item.groups}}{% endif %}"
-        shell={{item.shell if item.shell is defined else defaultShell}}
-        remove={{item.remove if item.remove is defined else defaultRemove}}
+        name="{{ item.account }}"
+        state="{{ item.state | default("present") }}"
+        comment="{{ item.comment | default(omit) }}"
+        groups="{{ items.groups | default(omit) }}"
+        shell="{{ item.shell | default(userManage_default_shell) }}"
+        remove="{{ item.remove | default(userManage_default_remove) }}"
         force=yes
         append=True
       with_items: ServerAccess
-      tags: linux_users
 
     - name: Mange authorized_keys for multi access to same user
       authorized_key: 
@@ -32,6 +30,5 @@
           - ServerAccess 
           - userkeys 
       register: keyrc
-      tags: linux_users
       failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
 
