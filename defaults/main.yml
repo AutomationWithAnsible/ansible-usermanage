@@ -1,8 +1,11 @@
 ---
 
 usermanage_default_shell                    : "/bin/bash"
-usermanage_default_remove                   : "yes"
-usermanage_manage_per_server                :
+usermanage_default_home_dir_prefix          : "/home"
+usermanage_create_per_user_group            : true  # Create a group for every user and make that their primary group
+usermanage_default_group                    : ops  # If your not creating a per user group use default group for all
+
+usermanage_per_server                       : true
 ##
 ## Database for user
 ##    fullname: User descripition (required)
@@ -15,7 +18,8 @@ usermanage_manage_per_server                :
 ## /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
 ## if you want to use debug use the limit to one server than delete the tempfile
 ## for more info look at the debug users task in the play book
-usermanage_debug                       : true
+usermanage_debug                       : false
+usermanage_debug_dir                   : /tmp/usermanage_debug/
 
 
 

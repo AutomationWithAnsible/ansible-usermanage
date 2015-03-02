@@ -3,27 +3,32 @@ inventory_hostname= {{inventory_hostname}}
 
 Global Users Info
 -----------------
-name     : {{item.account}}
-fullname : {{usermanage_users[item.account].fullname}}
-Pubkey   : {{usermanage_users[item.account].pubkey}} 
+name     : {{item.name}}
+fullname : {{usermanage_users[item.name].fullname}}
+Pubkey   : {{usermanage_users[item.name].pubkey}}
 
 
 Server Info
 -----------
 host        : {{inventory_hostname}}
-groups      : {{item.groups | default('')}}
-state       : {{item.state | default('present')}}
-remove      : {{item.remove | default(usermanage_default_remove)}}
-shell       : {{item.shell | default(usermanage_default_shell)}}
-key_options : {{item.key_options | default }}
+uid         : "{{ item.uid | default(omit) }}"
+group       : "{{ item.name if usermanage_create_per_user_group else usermanage_create_per_user_group }}"
+comment     : "{{ item.comment | default(omit) }}"
+groups      : "{{ item.groups | default(omit) }}"
+shell       : "{{ item.shell | default(usermanage_default_shell) }}"
+home        : "{{ item.home | default(usermanage_default_home_dir_prefix + "/" + item.name) }}"
+createhome  : "{{ item.createhome | default(true) }}"
+expires     : "{{ item.expires | default(omit) }}"
+remove      : "{{ item.remove | default(omit) }}"
 
+key_options : {{item.key_options | default }}
 -------
 KeyAccess:
 
 {% if item.userkeys is defined %}
 Keys:
 {% for key in item.userkeys  %}
-        {{ key }}
+    {{ key }}
 {% endfor %}
 {% else %}
 No Keys
