@@ -1,5 +1,8 @@
-ReadMe 
+ansible-usermanage
 ===
+
+#NOTE:
+Major rewrite is going on so please hold on :)
 
 #Why?
 
