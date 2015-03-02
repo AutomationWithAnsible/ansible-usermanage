@@ -1,0 +1,23 @@
+---
+
+usermanage_default_shell                    : "/bin/bash"
+usermanage_default_remove                   : "yes"
+usermanage_manage_per_server                :
+##
+## Database for user
+##    fullname: User descripition (required)
+##    pubkey: ssh key for a user (required)
+##    delete: Global delete (optional)
+##           (if defined will override state of host/group var)
+
+
+## WARNING Debug will deploy a text file on target server and dumps variable file
+## /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
+## if you want to use debug use the limit to one server than delete the tempfile
+## for more info look at the debug users task in the play book
+usermanage_debug                       : true
+
+
+
+## Example Test users you should over
+#usermanage_users:
