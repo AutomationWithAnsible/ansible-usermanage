@@ -3,7 +3,7 @@
   hosts        : all
   gather_facts : no
   sudo         : True
-  vars_files : 
-    - "vars/usersdb.yml"
+  vars_files   :
+                 - "test1_var.yml"
   roles:
-    - ansible-authentication
+    - ansible-usermanage

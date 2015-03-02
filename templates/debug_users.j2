@@ -4,30 +4,27 @@ inventory_hostname= {{inventory_hostname}}
 Global Users Info
 -----------------
 name     : {{item.account}}
-fullname : {{LinuxUsers[item.account].fullname}}
-Pubkey   : {{LinuxUsers[item.account].pubkey}} 
+fullname : {{usermanage_users[item.account].fullname}}
+Pubkey   : {{usermanage_users[item.account].pubkey}} 
 
 
 Server Info
 -----------
-host 	    : {{inventory_hostname}}
-groups      : {{item.groups}}
-state       : {{item.state if item.state is defined else defaultState}}
-remove      : {{item.remove if item.remove is defined else defaultRemove}}
-shell       : {{item.shell if item.shell is defined else defaultShell }}
-key_options : {{item.key_options if item.key_options is defined else "" }}
+host        : {{inventory_hostname}}
+groups      : {{item.groups | default('')}}
+state       : {{item.state | default('present')}}
+remove      : {{item.remove | default(usermanage_default_remove)}}
+shell       : {{item.shell | default(usermanage_default_shell)}}
+key_options : {{item.key_options | default }}
 
 -------
 KeyAccess:
 
 {% if item.userkeys is defined %}
 Keys:
-	{% for key in item.userkeys  %}
-----> {{ key }}
-	{% endfor %}
+{% for key in item.userkeys  %}
+        {{ key }}
+{% endfor %}
 {% else %}
 No Keys
 {% endif %}
- 
- 
- 	
