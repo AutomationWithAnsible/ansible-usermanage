@@ -21,21 +21,21 @@
   with_items: usermanage_servers
   when: usermanage_create_per_user_group
 
-#- name: single | Create groups
-#  group:
-#    name="{{ item.name }}"
-#    state="{{ item.state | default("present") }}"
-#    gid: '{{ item.gid | default(omit) }}'
-#    system="{{ item.system | default('no'}}"
-#  with_items: usermanage_servers
-#  when: usermanage_create_per_user_group
+- name: single | Create groups
+  group:
+    name="{{ item.name }}"
+    state="{{ item.state | default("present") }}"
+    gid="{{ item.gid | default(omit) }}"
+    system="{{ item.system | default('no') }}"
+  with_items: usermanage_groups
+  when: usermanage_groups is defined
 
 - name: single | Create users
   user:
     name="{{ item.name }}"
     state="{{ item.state | default("present") }}"
     uid="{{ item.uid | default(omit) }}"
-    group="{{ item.name if usermanage_create_per_user_group else usermanage_create_per_user_group }}"
+    group="{{ item.name if usermanage_create_per_user_group else usermanage_create_per_user_group if usermanage_create_per_user_group else undefined |  default(omit) }}"
     comment="{{ item.comment | default(omit) }}"
     groups="{{ item.groups | default(omit) }}"
     shell="{{ item.shell | default(usermanage_default_shell) }}"
