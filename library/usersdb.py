@@ -37,15 +37,14 @@ class UsersDB(object):
                     # dont merge you will delete any way
                 else:
                     # merge do some magic
+                    a_user = dict(user_definition.items() + a_user.items())
 
-                self.module.fail_json(msg="XXXXXXXXXXXXXX= '%s'" %user_definition )
             elif a_user.get("team"):
                 pass
             else:
                 self.module.fail_json(msg="Your server definition has no user or team. Please check your data type.")
-
-
-
+            # Add the final merge
+            self.compiled_list.append(a_user)
 
     def expand_users(self):
         for a_user, a_user_options in self.users_db.iteritems():
