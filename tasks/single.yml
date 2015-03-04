@@ -1,4 +1,25 @@
 ---
+# We are sending comples args
+- name: single | Compile effective users
+  usersdb:
+      usersdb:
+        "{{ usermanage_usersdb }}"
+      teamsdb:
+        "{{ usermanage_teamsdb }}"
+      serversdb:
+        "{{ usermanage_servers }}"
+
+  connection: local
+  register: cuser
+  sudo: no
+  tags: libs
+
+- name: debug flat users
+  debug:
+    var=cuser.compiled_list
+  sudo: no
+  tags: libs
+
 - name: single | Debug directory create
   file:
     path={{ usermanage_debug_dir }}
@@ -47,11 +68,26 @@
     append=True
   with_items: usermanage_servers
 
+#- name: single | Mange authorized_keys for multi access to same user
+#  authorized_key:
+#     user="{{ item.0.name }}"
+#     state={{ 'absent' if 'delete' in usermanage_users[item.0.name] else item.1.state | default('present') }}
+#     key="{{ usermanage_users[item.1.user].pubkey | default(omit) }}"
+#     manage_dir="yes"
+#     key_options="{{ item.1.key_options | default(omit) }}"
+#  with_subelements:
+#      - usermanage_servers
+#      - userkeys
+#  register: keyrc
+#  failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
+#
+
+
 - name: single | Mange authorized_keys for multi access to same user
   authorized_key:
      user="{{ item.0.name }}"
-     state={{ 'absent' if 'delete' in usermanage_users[item.0.name] else item.1.state | default('present') }}
-     key="{{ usermanage_users[item.1.user].pubkey | default(omit) }}"
+     state={{ lookup("template","../templates/get_user_state.j2") }}
+     key="{{ lookup("template","../templates/get_user_key.j2") }}"
      manage_dir="yes"
      key_options="{{ item.1.key_options | default(omit) }}"
   with_subelements:
@@ -59,4 +95,5 @@
       - userkeys
   register: keyrc
   failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
+
 

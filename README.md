@@ -6,7 +6,7 @@ Major rewrite is going on so please hold on :)
 
 #Why?
 
-This playbook was developed to manage users and SSH keys in multi node environment.
+This playbook was developed to manage users and SSH keys in multi node environment. it does not and will not support passwords based authentication 
 The idea is you define a user database in a YAML file, then define access in your host/group variable. This keeps things organized and easily add/change/remove mass users.
 
 # Instruction
@@ -71,7 +71,6 @@ ServerAccess:
 # TODO
 Currently the playbook serves my needs, but I it lacks some features
 
-1. Add support for unix group management 
-2. Shadow password support
-3. Support multiple user files
-4. Syntax check with_subelements (userkeys) if user has no ssh key
+
+1 Support multiple user files
+2. Syntax check with_subelements (userkeys) if user has no ssh key
