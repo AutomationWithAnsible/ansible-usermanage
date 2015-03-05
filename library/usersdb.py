@@ -8,35 +8,21 @@ class UsersDB(object):
         self.teams_db = self.module.params["teamsdb"]
         self.servers_db = self.module.params["serversdb"]
         self.compiled_list = []
-          # - name               : "testuser"
-          #   userkeys           :
-          #        - user        : 'testuser'
-          #
-          # - name               : "ops"
-          #   groups             : ""
-          #   state              : "present"
-          #   userkeys           :
-          #        - user        : 'ops'
-          #          state       : 'present'
-          #          key_options : ''
-          #
-          #        - user        : 'stewart'
-          #          state       : 'present'
-          #          key_options : ''
 
     def expand_servers(self):
         # Expand server will overwrite same attributes defined in userdb except for state = "absent"
         for a_user in self.servers_db:
             # 1st lets get the user/team dictionary from the userdb
-            #
+
             #team_definition = self.users_db.get("team")
             if a_user.get("user"):
                 user_definition = self.users_db.get(a_user.get("user"))
-                if user_definition.get("state",None) == "absent":
+                if user_definition.get("state", None) == "absent":
                     pass
                     # dont merge you will delete any way
                 else:
                     # merge do some magic
+                    # TODO: How to merge Keys and key options 
                     a_user = dict(user_definition.items() + a_user.items())
 
             elif a_user.get("team"):

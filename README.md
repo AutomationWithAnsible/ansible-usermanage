@@ -2,7 +2,16 @@ ansible-usermanage
 ===
 
 #NOTE:
-Major rewrite is going on so please hold on :)
+*Major rewrite is going on so please hold on :) or use stable release* 
+
+# TODO
+Currently the playbook serves my needs, but I it lacks some features
+
+* Finish rewrite of library
+* Write test
+* Support multiple user files and chef databag
+* Support DB can be in get
+* Syntax checks
 
 #Why?
 
@@ -68,9 +77,4 @@ ServerAccess:
                key_options : '' 
 ```
 
-# TODO
-Currently the playbook serves my needs, but I it lacks some features
 
-
-1 Support multiple user files
-2. Syntax check with_subelements (userkeys) if user has no ssh key
