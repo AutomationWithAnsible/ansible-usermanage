@@ -6,8 +6,8 @@
         "{{ usermanage_usersdb }}"
       teamsdb:
         "{{ usermanage_teamsdb }}"
-      serversdb:
-        "{{ usermanage_servers }}"
+#      serversdb:
+#        "{{ usermanage_servers }}"
 
   connection: local
   register: cuser
@@ -16,7 +16,7 @@
 
 - name: debug flat users
   debug:
-    var=cuser.compiled_list
+    var=cuser.expanded_users_db
   sudo: no
   tags: libs
 
