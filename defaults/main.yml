@@ -22,7 +22,7 @@ usermanage_debug                       : false
 usermanage_debug_level                 : 2  # support 1 or 2 for now
 usermanage_debug_dir                   : /tmp/usermanage_debug/
 
-
-
-## Example Test users you should over
-#usermanage_users:
+# You must override those variables
+usermanage_usersdb                     : false
+usermanage_servers                     : false
+usermanage_teamsdb                     : false

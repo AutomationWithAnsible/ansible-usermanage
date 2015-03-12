@@ -6,22 +6,11 @@
         "{{ usermanage_usersdb }}"
       teamsdb:
         "{{ usermanage_teamsdb }}"
+      serversdb:
+        "{{ usermanage_servers }}"
   register: cuser
   connection: local
   sudo: no
-
-#- name: main | Compile effective users
-#  usersdb:
-#      usersdb:
-#        "{{ usermanage_usersdb }}"
-#      teamsdb:
-#        "{{ usermanage_teamsdb }}"
-#      serversdb:
-#        "{{ usermanage_servers }}"
-#  register: cuser
-#  connection: local
-#  sudo: no
-
 
 - include: debug.yml
   when: usermanage_debug

@@ -21,7 +21,7 @@ class UsersDB(object):
             for user_key in user_keys:
                 new_user_key = dict(user_key, **server_keys)
                 new_user_key.pop("name", None)
-                new_user_key.update({"user": user_name})
+                new_user_key.pop("user", None)
                 new_user_keys.append(new_user_key)
         elif server_keys:
             # server key is dic
@@ -32,7 +32,7 @@ class UsersDB(object):
             for user_key in user_keys:
                 new_user_key = user_key
                 new_user_key.pop("name", None)
-                new_user_key.update({"user": user_name})
+                new_user_key.pop("user", None)
                 new_user_keys.append(new_user_key)
         else:
             self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
@@ -91,7 +91,6 @@ class UsersDB(object):
             self.expanded_server_db.append(user_server)
             self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
-
     def expand_keys(self, keys, user):
         if len(keys) == 0:
             # TODO: Should work without keys maybe ?!?!?
@@ -132,7 +131,8 @@ class UsersDB(object):
 
     def main(self):
         self.expand_users()
-        if self.servers_db:
+
+        if self.servers_db and self.servers_db[0] != "False":
             # Advanced mode we have to do merges and stuff :D
             self.expand_servers()
             result = {"changed": False, "msg": "",
