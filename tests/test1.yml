@@ -4,6 +4,6 @@
   gather_facts : no
   sudo         : True
   vars_files   :
-                 - "test1_var.yml"
-  roles:
-    - ansible-usermanage
+                 - "user_db_1.yml"
+  roles        :
+                 - ansible-usermanage

@@ -17,17 +17,3 @@
       - keys
   register: keyrc
   failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
-
-#- name: single | Manage authorized_keys for multi access to same user
-#  authorized_key:
-#     user="{{ item.0.name }}"
-#     state={{ lookup("template","../templates/get_user_state.j2") }}
-#     key="{{ lookup("template","../templates/get_user_key.j2") }}"
-#     manage_dir="yes"
-#     key_options="{{ item.1.key_options | default(omit) }}"
-#  with_subelements:
-#      - usermanage_servers
-#      - userkeys
-#  register: keyrc
-#  failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
-

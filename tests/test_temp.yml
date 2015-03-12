@@ -1,5 +1,32 @@
 ---
 
+
+
+usermanage_groupsdb  :
+    group1           :
+        state        : "present"
+        gid          : "5000"
+        system       : "true"
+
+    group2           :
+        state        : "present"
+        gid          : "5001"
+        system       : "false"
+
+    group3           :
+        state        : "absent"
+
+usermanage_teamsdb   :
+    team1            :
+                        - daniels
+                        - stewart
+    team2            :
+                        - ops
+    team3            :
+                       - testuser
+                       - ops
+
+
 ServerAccess:
       #Simplest form (create testuser and push the testuser key defined in the userdb)
       - account     : "testuser"

@@ -66,10 +66,10 @@ class UsersDB(object):
 
     def expand_servers(self):
         # Advanced mode Merges users and servers data
-        # Expand server will overwrite same attributes defined in userdb except for state = "absent"
+        # Expand server will overwrite same attributes defined in user db except for state = "absent"
         for user_server in self.servers_db:
             user_server_keys = None
-            # 1st lets get the user/team dictionary from the userdb
+            # 1st lets get the user/team dictionary from the user db
             user_name = user_server.get("user") or user_server.get("name", False)
             user_definition = self.users_db.get(user_name)
             team_definition = user_server.get("team", False)
