@@ -1,0 +1,34 @@
+---
+
+- name: debug | Display compiled user
+  debug:
+    var=cuser.users_db
+  sudo: no
+  when: usermanage_debug_level >= 2
+
+- name: debug | Display compiled keys
+  debug:
+    var=cuser.key_db
+  sudo: no
+  when: usermanage_debug_level >= 2
+
+- name: debug | Display lookup_key_db keys
+  debug:
+    var=cuser.lookup_key_db
+  sudo: no
+  when: usermanage_debug_level >= 3 and cuser.lookup_key_db is defined
+
+- name: debug | Debug directory create
+  file:
+    path={{ usermanage_debug_dir }}
+    state="directory"
+    mode=0700
+    owner=root
+  when: usermanage_debug_level >= 1
+
+- name: debug | Debug Users /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
+  template:
+     src=debug_users.j2
+     dest="{{ usermanage_debug_dir }}/{{ inventory_hostname }}-{{ item.user | default(item.name) }}"
+  with_items: cuser.users_db
+  when: usermanage_debug_level >= 1

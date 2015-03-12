@@ -19,6 +19,7 @@ usermanage_per_server                       : true
 ## if you want to use debug use the limit to one server than delete the tempfile
 ## for more info look at the debug users task in the play book
 usermanage_debug                       : false
+usermanage_debug_level                 : 2  # support 1 or 2 for now
 usermanage_debug_dir                   : /tmp/usermanage_debug/
 
 

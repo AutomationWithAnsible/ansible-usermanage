@@ -1,35 +1,4 @@
 inventory_hostname= {{inventory_hostname}}
 ------------------------------------------
 
-Global Users Info
------------------
-name     : {{item.name}}
-fullname : {{usermanage_users[item.name].fullname}}
-Pubkey   : {{usermanage_users[item.name].pubkey}}
-
-
-Server Info
------------
-host        : {{inventory_hostname}}
-uid         : "{{ item.uid | default(omit) }}"
-group       : "{{ item.name if usermanage_create_per_user_group else usermanage_create_per_user_group }}"
-comment     : "{{ item.comment | default(omit) }}"
-groups      : "{{ item.groups | default(omit) }}"
-shell       : "{{ item.shell | default(usermanage_default_shell) }}"
-home        : "{{ item.home | default(usermanage_default_home_dir_prefix + "/" + item.name) }}"
-createhome  : "{{ item.createhome | default(true) }}"
-expires     : "{{ item.expires | default(omit) }}"
-remove      : "{{ item.remove | default(omit) }}"
-
-key_options : {{item.key_options | default }}
--------
-KeyAccess:
-
-{% if item.userkeys is defined %}
-Keys:
-{% for key in item.userkeys  %}
-    {{ key }}
-{% endfor %}
-{% else %}
-No Keys
-{% endif %}
+{{ item | to_nice_yaml }}

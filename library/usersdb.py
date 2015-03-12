@@ -5,22 +5,40 @@ class UsersDB(object):
     def __init__(self, module):
         self.module = module
         self.users_db = self.module.params["usersdb"]
-        self.keys_db = {}  # used for quick lookup
         self.teams_db = self.module.params["teamsdb"]
         self.servers_db = self.module.params["serversdb"]
-        self.expanded_users_db = []
-        # Our final compiled DB to use
-        self.expanded_server_db = []
+        # Databases
+        self.lookup_key_db = {}  # used for quick lookup
+        self.expanded_users_db = []  # Used in simple mode
+        self.expanded_users_key_db = []  # Used in simple mode
+        self.expanded_server_db = []  # Used in advanced mode for merged User + server
+        self.expanded_server_key_db = []  # Used in advanced mode
 
-    @staticmethod
-    def concat_keys(user_keys, server_keys):
-        # Override all user_key
+    def _concat_keys(self, user_name, user_keys=None, server_keys=None):
+        # Concat keys (if possible) and update username to keys
         new_user_keys = []
-        for user_key in user_keys:
-            new_user_keys.append(dict(user_key, **server_keys))
+        if user_keys and server_keys:
+            for user_key in user_keys:
+                new_user_key = dict(user_key, **server_keys)
+                new_user_key.pop("name", None)
+                new_user_key.update({"user": user_name})
+                new_user_keys.append(new_user_key)
+        elif server_keys:
+            # server key is dic
+            server_keys.pop("name", None)
+            server_keys.update({"user": user_name})
+            new_user_keys = [server_keys]
+        elif user_keys:
+            for user_key in user_keys:
+                new_user_key = user_key
+                new_user_key.pop("name", None)
+                new_user_key.update({"user": user_name})
+                new_user_keys.append(new_user_key)
+        else:
+            self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
         return new_user_keys
 
-    def merge_key(self, user_keys, sever_keys, user_name):
+    def _merge_key(self, user_keys, sever_keys, user_name):
         # Rules ( no real merge happens )
         # 1- Default use the user key
         # 2- if server has defined keys then use those instead no merge here
@@ -28,28 +46,29 @@ class UsersDB(object):
             merged_keys = []
             for server_key in sever_keys:
                 if "account" in server_key:
-                    account_key = self.keys_db.get(server_key.pop("account"))
-                    merged_keys += self.concat_keys(account_key, server_key)
+                    account_key = self.lookup_key_db.get(server_key.pop("account"))
+                    merged_keys += self._concat_keys(user_name, account_key, server_key)
                 elif "team" in server_key:
                     pass
                 elif "key" in server_key:
-                    merged_keys.append(server_key)
+                    merged_keys += self._concat_keys(user_name, server_keys=server_key)
                 else:
                     self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
             return merged_keys
         else:
-            return user_keys
+            return self._concat_keys(user_name, user_keys=user_keys)
 
-    def merge_user(self, user_user_db, user_server_db, user_name):
-        user_db_key = self.keys_db.get(user_name, None)
-        merged_key = self.merge_key(user_db_key, user_server_db.get("keys", None), "static name")
+    @staticmethod
+    def _merge_user(user_user_db, user_server_db,):
         merged_user = dict(user_user_db.items() + user_server_db.items())
-        merged_user.update({"keys": merged_key})
+        merged_user.pop("keys", None)
         return merged_user
 
     def expand_servers(self):
+        # Advanced mode Merges users and servers data
         # Expand server will overwrite same attributes defined in userdb except for state = "absent"
         for user_server in self.servers_db:
+            user_server_keys = None
             # 1st lets get the user/team dictionary from the userdb
             user_name = user_server.get("user") or user_server.get("name", False)
             user_definition = self.users_db.get(user_name)
@@ -59,16 +78,19 @@ class UsersDB(object):
                     # Don't merge you will delete any way
                     pass
                 else:
-                    # Merge User and Server ( Server has precedence in this case
-                    user_server = self.merge_user(user_definition, user_server, user_name)
-
+                    # Merge User and Server ( Server has precedence in this case )
+                    user_server = self._merge_user(user_definition, user_server)
+                    user_db_key = self.lookup_key_db.get(user_name, None)
+                    user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name)
             elif team_definition:
                 # TODO: Should expand teams
-                pass
+                self.module.fail_json(msg="Team is not yet implemented")
             else:
                 self.module.fail_json(msg="Your server definition has no user or team. Please check your data type.")
-            # Add the final merge
+            # Populate DBs
             self.expanded_server_db.append(user_server)
+            self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
+
 
     def expand_keys(self, keys, user):
         if len(keys) == 0:
@@ -101,19 +123,26 @@ class UsersDB(object):
             # 2- Compile key
             unformatted_keys = user_options.get("keys", [])
             keys = self.expand_keys(unformatted_keys, user)
-            user.update({"keys": keys})
-            # 3- Populate DB
-            self.expanded_users_db.append(user)  # Populate  new user db
-            self.keys_db.update({username: keys})  # Populate key db
+            # 3- remove keys from userdb if exists
+            user.pop("keys", None)
+            # 4- Populate DBs
+            self.expanded_users_db.append(user)  # Populate new list user db
+            self.expanded_users_key_db.append({"user": username, "keys": keys})
+            self.lookup_key_db.update({username: keys})  # Populate dict key db
 
     def main(self):
         self.expand_users()
         if self.servers_db:
-            # Check if we are customizing per server subgroup
+            # Advanced mode we have to do merges and stuff :D
             self.expand_servers()
-            result = {"changed": False, "msg": "", "expanded_users_db": self.expanded_server_db, "key_db": self.keys_db}
+            result = {"changed": False, "msg": "",
+                      "users_db": self.expanded_server_db,
+                      "key_db": self.expanded_users_key_db}
         else:
-            result = {"changed": False, "msg": "", "expanded_users_db": self.expanded_users_db, "key_db": self.keys_db}
+            # Simple mode no servers db
+            result = {"changed": False, "msg": "",
+                      "users_db": self.expanded_users_db,
+                      "key_db": self.expanded_users_key_db}
         self.module.exit_json(**result)
 
 

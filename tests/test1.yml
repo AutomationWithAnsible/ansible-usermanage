@@ -1,5 +1,5 @@
 ---
-- name         : Linux User Managment 
+- name         : Simple Mode (1)
   hosts        : all
   gather_facts : no
   sudo         : True

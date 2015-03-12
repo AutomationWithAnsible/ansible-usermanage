@@ -1,0 +1,17 @@
+---
+
+- name: groups | Create per user group
+  group:
+    name="{{ item.name }}"
+    state="{{ item.state | default("present") }}"
+  with_items: usermanage_servers
+  when: usermanage_create_per_user_group
+
+- name: groups | Create groups
+  group:
+    name="{{ item.name }}"
+    state="{{ item.state | default("present") }}"
+    gid="{{ item.gid | default(omit) }}"
+    system="{{ item.system | default('no') }}"
+  with_items: usermanage_groups
+  when: usermanage_groups is defined
