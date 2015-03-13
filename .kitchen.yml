@@ -7,13 +7,11 @@ provisioner:
   script: test/run_kitchen.sh
 
 platforms:
-
-platforms:
     - name: ubuntu-14.04
       driver:
         box: ubuntu/trusty64
         synced_folders:
          - [ "<%= Dir.pwd %>", "<%= '/mnt/shared/' + File.basename(Dir.pwd) %>/"]
-# - [ "<%= puts Dir.pwd %>", "/mnt/shared/"]
+
 suites:
   - name: default
