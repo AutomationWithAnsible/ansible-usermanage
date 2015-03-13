@@ -25,4 +25,4 @@ usermanage_debug_dir                   : /tmp/usermanage_debug/
 # You must override those variables
 usermanage_usersdb                     : false
 usermanage_servers                     : false
-usermanage_teamsdb                     : false
+usermanage_teamsdb                     : None

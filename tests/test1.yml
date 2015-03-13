@@ -3,7 +3,9 @@
   hosts        : all
   gather_facts : no
   sudo         : True
+  connection   : local
+
   vars_files   :
                  - "user_db_1.yml"
   roles        :
-                 - ansible-usermanage
+                 - "ansible-usermanage"

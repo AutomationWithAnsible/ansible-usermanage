@@ -150,7 +150,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             usersdb=dict(default=None, required=True, type="dict"),
-            teamsdb=dict(default=None, required=True, type="dict"),
+            teamsdb=dict(default=None, required=False, type=None),  # Should be dict but would break if value is false/none
             serversdb=dict(default=None, required=False, type="list"),
         ),
         supports_check_mode=False
