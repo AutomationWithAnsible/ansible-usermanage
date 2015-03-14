@@ -54,8 +54,10 @@ class TravisExec(object):
 
     @staticmethod
     def _execute_command(command):
-        new_command = ["echo '> " + item + "' && " + item for item in command]
-        p = subprocess.Popen(" && ".join(new_command), shell=True, stderr=subprocess.PIPE)
+        new_command = ["echo '> " + item.rstrip('\n') + "' && { " + item.rstrip('\n') + " ; }" for item in command]
+        new_command = " && ".join(new_command)
+
+        p = subprocess.Popen(new_command, shell=True, stderr=subprocess.PIPE)
         while True:
             out = p.stderr.read(1)
             if out == '' and p.poll() is not None:

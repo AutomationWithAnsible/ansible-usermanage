@@ -1,0 +1,41 @@
+---
+language: python
+python: "2.7"
+
+before_install:
+  # Make sure everything's up to date.
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt python-pycurl git
+
+install:
+  - pip install ansible
+  - git clone https://github.com/ahelal/ansible-spec ../ansible-spec
+
+script:
+    - cd test
+    - ansible --version
+
+    # test1.yml 1st: check syntax
+    - ansible-playbook -i local.ini application/test1.yml --syntax-check
+    # test1.yml 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/test1.yml --sudo -vvvv
+    # test1.yml 3rd:  Make sure our playbook is idempotent
+    - >
+      ansible-playbook -i local.ini application/test1.yml --sudo -vvvv | tee ansible_output
+      | grep -q 'changed=0.*failed=0'
+      && (echo 'Idempotence test: pass' && exit 0)
+      || (echo 'Idempotence test: fail' && exit 1)
+
+    # test1.yml 4th: run test make sure module spit it right data
+    - ansible-playbook -i local.ini application/test1_spec.yml --sudo -vvvv -C
+
+after_failure:
+    - echo "Failure"
+    - sudo cat ansible_output
+    - sudo netstat -atnlp
+    - sudo cat /home/nexus/sonatype-work/nexus/logs/nexus.log
+    - sudo cat /home/nexus/sonatype-work/nexus/logs/request.log
+    - ansible -i 127.0.0.1, -m setup all -c local
+
+after_success:
+    - echo "Success"
