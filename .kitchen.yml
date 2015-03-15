@@ -4,7 +4,7 @@ driver:
 
 provisioner:
   name: shell
-  script: test/run_kitchen.sh
+  script: test/run_vagrant_kitchen.sh
 
 platforms:
     - name: ubuntu-14.04

@@ -15,19 +15,19 @@ script:
     - cd test
     - ansible --version
 
-    # test1.yml 1st: check syntax
-    - ansible-playbook -i local.ini application/test1.yml --syntax-check
-    # test1.yml 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/test1.yml --sudo -vvvv
-    # test1.yml 3rd:  Make sure our playbook is idempotent
+    # simple.yml 1st: check syntax
+    - ansible-playbook -i local.ini application/simple.yml --syntax-check
+    # simple.yml 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/simple.yml --sudo -vvvv
+    # simple.yml 3rd:  Make sure our playbook is idempotent
     - >
-      ansible-playbook -i local.ini application/test1.yml --sudo -vvvv | tee ansible_output
+      ansible-playbook -i local.ini application/simple.yml --sudo -vvvv | tee ansible_output
       | grep -q 'changed=0.*failed=0'
       && (echo 'Idempotence test: pass' && exit 0)
       || (echo 'Idempotence test: fail' && exit 1)
 
-    # test1.yml 4th: run test make sure module spit it right data
-    - ansible-playbook -i local.ini application/test1_spec.yml --sudo -vvvv -C
+    # simple.yml 4th: run test make sure module spit it right data
+    - ansible-playbook -i local.ini application/simple_spec.yml --sudo -vvvv -C
 
 after_failure:
     - echo "Failure"
