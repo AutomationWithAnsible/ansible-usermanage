@@ -4,7 +4,8 @@ ansible-usermanage
 #NOTE:
 *Major rewrite is going on so please hold on :) or use stable release* 
 
-#Why?
+
+# What
 
 This playbook was developed to manage users, groups, teams and SSH keys in multi node environment.
 It supports two modes *simple mode and advanced mode*
