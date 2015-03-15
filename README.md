@@ -1,11 +1,11 @@
 ansible-usermanage
 ===
 
-#NOTE:
+## NOTE 
 *Major rewrite is going on so please hold on :) or use stable release* 
 
 
-# What
+## What
 
 This playbook was developed to manage users, groups, teams and SSH keys in multi node environment.
 It supports two modes *simple mode and advanced mode*
@@ -42,7 +42,7 @@ Basically **usermanage_usersdb** is a dictionary of users each user will accept 
 
 A special arugment **keys** which is a list of keys that will be created for that user, each key can accept all options defined in [authorized key module](http://docs.ansible.com/authorized_key_module.html)
 
-### Group Managment
+### Group Management
 ToDo document
 
 ### Advanced mode
