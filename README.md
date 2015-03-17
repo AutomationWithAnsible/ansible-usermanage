@@ -16,7 +16,7 @@ It supports two modes *simple mode and advanced mode*
 
 You define your user in a variable *usermanage_usersdb* in the scope of your server
 
-```
+```yaml
 usermanage_usersdb: 
   daniels: 
     comment: "Jack daniels"
