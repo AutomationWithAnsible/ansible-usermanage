@@ -14,20 +14,34 @@ install:
 script:
     - cd test
     - ansible --version
-
-    # simple.yml 1st: check syntax
+    ## Simple
+    # 1st: check syntax
     - ansible-playbook -i local.ini application/simple.yml --syntax-check
-    # simple.yml 2nd:  Make sure we run the entire playbook
+    # 2nd:  Make sure we run the entire playbook
     - ansible-playbook -i local.ini application/simple.yml --sudo -vvvv
-    # simple.yml 3rd:  Make sure our playbook is idempotent
+    # 3rd:  Make sure our playbook is idempotent
     - >
       ansible-playbook -i local.ini application/simple.yml --sudo -vvvv | tee ansible_output
       | grep -q 'changed=0.*failed=0'
       && (echo 'Idempotence test: pass' && exit 0)
       || (echo 'Idempotence test: fail' && exit 1)
-
-    # simple.yml 4th: run test make sure module spit it right data
+    # 4th: run test make sure module spit it right data
     - ansible-playbook -i local.ini application/simple_spec.yml --sudo -vvvv -C
+
+    ## Advanced
+    # 1st: check syntax
+    - ansible-playbook -i local.ini application/advanced.yml --syntax-check
+    # 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/advanced.yml --sudo -vvvv
+    # 3rd:  Make sure our playbook is idempotent
+    - >
+      ansible-playbook -i local.ini application/advanced.yml --sudo -vvvv | tee ansible_output
+      | grep -q 'changed=0.*failed=0'
+      && (echo 'Idempotence test: pass' && exit 0)
+      || (echo 'Idempotence test: fail' && exit 1)
+    # 4th: run test make sure module spit it right data
+    - ansible-playbook -i local.ini application/advanced_spec.yml --sudo -vvvv -C
+
 
 after_failure:
     - echo "Failure"

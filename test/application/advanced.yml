@@ -1,0 +1,13 @@
+---
+- name         : Advanced Mode (1)
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  connection   : local
+  vars         :
+                 usermanage_debug : true
+  vars_files   :
+                 - "advanced_user_db.yml"
+                 - "advanced_server_db.yml"
+  roles        :
+                 - "ansible-usermanage"

@@ -1,0 +1,28 @@
+---
+
+ServerAccess:
+      #Simplest form (create testuser and push the testuser key defined in the userdb)
+      - account     : "label"
+        groups      : "sudo"
+        uid         : 4000
+
+      - account     : "ops"
+        groups      : "operator"
+        state       : "present"
+        keys        :
+             - user : 'daniels'
+               state: 'present'
+               key_options : 'no-port-forwarding'
+             - user : 'stewart'
+               state: 'present'
+
+      - account     : "dev"
+        groups      : 'ops,lpadmin'
+        state       : 'present'
+        shell       : '/bin/false'
+        userkeys    :
+             - user        : 'vodka'
+               state       : 'present'
+               key_options : 'no-port-forwarding'
+             - user        : 'raki'  # should be not there
+               state       : 'present'

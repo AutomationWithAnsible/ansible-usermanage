@@ -1,0 +1,23 @@
+---
+- name         : Simple Mode Spec (1)
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  connection   : local
+  vars:
+    assert_no_logs: True
+    tests:
+       - name: Check user Black Label
+            user   : "label"
+            groups : "sudo"
+            uid    : 4000
+
+       - name: Check 1st key for user Black Label
+         authorized_key:
+            user: "label"
+            key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDbakoTSJHYJ88J3//celPFG1kAXv0WvH0o1WkJmrjZe1nWvpHArSv9MmELh3QOu2L3f87Yx8p0kzz0wTQowQisrspFSI6lvIJ+2aapx4J+4O+9IRR+XRcw6giD4OGfTH3af8lgAmVvrcfP41NH4l/jl2Fs+BjeCudTTFemy6L8wlHZPOdsHFs/71aAAcUqpLmrBECHzHBo+LzNZ2ZKy7s+V6RNR5TmWUdupQGsuE6C5yY2AZQ3cFxOmhPJsEVzQSZneCMfNQI3qfAYvXRQNXxQjCaXBJH7S+cCnf8kIrr+Ntfu5A54iyuAZ3SWVCLvym29ZTN0RH8fCvH9zqC5F0r/"
+         assert:
+            - "changed == false"
+
+  roles:
+    - role : ansible-spec
