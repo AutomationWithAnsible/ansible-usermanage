@@ -14,7 +14,7 @@ class UsersDB(object):
         self.expanded_server_db = []  # Used in advanced mode for merged User + server
         self.expanded_server_key_db = []  # Used in advanced mode
 
-    def _concat_keys(self, user_name, user_keys=None, server_keys=None):
+    def _concat_keys(self, user_name, user_keys=None, server_keys=None, user_status=False):
         # Concat keys (if possible) and update username to keys
         new_user_keys = []
         if user_keys and server_keys:
@@ -22,6 +22,8 @@ class UsersDB(object):
                 new_user_key = dict(user_key, **server_keys)
                 new_user_key.pop("name", None)
                 new_user_key.pop("user", None)
+                if user_status:
+                    new_user_key.update({"state": "absent"})
                 new_user_keys.append(new_user_key)
         elif server_keys:
             # server key is dic
@@ -31,14 +33,16 @@ class UsersDB(object):
         elif user_keys:
             for user_key in user_keys:
                 new_user_key = user_key
-                new_user_key.pop("name", None)
                 new_user_key.pop("user", None)
+                new_user_key.pop("name", None)
+                if user_status:
+                    new_user_key.update({"state": "absent"})
                 new_user_keys.append(new_user_key)
         else:
             self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
         return new_user_keys
 
-    def _merge_key(self, user_keys, sever_keys, user_name):
+    def _merge_key(self, user_keys, sever_keys, user_name, user_status=False):
         # Rules ( no real merge happens )
         # 1- Default use the user key
         # 2- if server has defined keys then use those instead no merge here
@@ -46,43 +50,49 @@ class UsersDB(object):
             merged_keys = []
             for server_key in sever_keys:
                 if "user" in server_key:
-                    account_key = self.lookup_key_db.get(server_key.pop("user"))
-                    merged_keys += self._concat_keys(user_name, account_key, server_key)
+                    # TODO: if username is wrong will not fail should fail
+                    user = server_key.pop("user")
+                    account_key = self.lookup_key_db.get(user)
+                    user_definition = self.users_db.get(user, {})
+                    if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
+                        user_status = "absent"
+                    merged_keys += self._concat_keys(user_name, account_key, server_key, user_status=user_status)
                 elif "team" in server_key:
                     pass
                 elif "key" in server_key:
-                    merged_keys += self._concat_keys(user_name, server_keys=server_key)
+                    merged_keys += self._concat_keys(user_name, server_keys=server_key, user_status=user_status)
                 else:
                     self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
             return merged_keys
         else:
-            return self._concat_keys(user_name, user_keys=user_keys)
+            return self._concat_keys(user_name, user_keys=user_keys, user_status=user_status)
 
     @staticmethod
-    def _merge_user(user_user_db, user_server_db):
+    def _merge_user(user_user_db, user_server_db, user_status=False):
         merged_user = dict(user_user_db.items() + user_server_db.items())
+        if user_status:
+            merged_user.update({"state": "absent"})
         return merged_user
 
     def expand_servers(self):
         # Advanced mode Merges users and servers data
         # Expand server will overwrite same attributes defined in user db except for state = "absent"
         for user_server in self.servers_db:
-
             user_server_keys = None
             # 1st lets get the user/team dictionary from the user db
             user_name = user_server.get("user") or user_server.get("name", False)
-
             user_definition = self.users_db.get(user_name)
             team_definition = user_server.get("team", False)
             if user_name:
                 if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
-                    # Don't merge you will delete any way
-                    pass
+                    user_status = "absent"
                 else:
-                    # Merge User and Server ( Server has precedence in this case )
-                    user_server = self._merge_user(user_definition, user_server)
-                    user_db_key = self.lookup_key_db.get(user_name, None)
-                    user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name)
+                    user_status = False
+
+                # Merge User and Server ( Server has precedence in this case )
+                user_server = self._merge_user(user_definition, user_server, user_status)
+                user_db_key = self.lookup_key_db.get(user_name, None)
+                user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name, user_status)
             elif team_definition:
                 # TODO: Should expand teams
                 self.module.fail_json(msg="Team is not yet implemented")
