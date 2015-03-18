@@ -8,7 +8,7 @@ before_install:
   - sudo apt-get install -qq python-apt python-pycurl git
 
 install:
-  - pip install ansible
+  - sudo pip install ansible
   - git clone https://github.com/ahelal/ansible-spec ../ansible-spec
 
 script:
