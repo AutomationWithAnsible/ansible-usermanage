@@ -26,7 +26,7 @@ class UsersDB(object):
         elif server_keys:
             # server key is dic
             server_keys.pop("name", None)
-            server_keys.update({"user": user_name})
+            #server_keys.update({"user": user_name})
             new_user_keys = [server_keys]
         elif user_keys:
             for user_key in user_keys:
@@ -45,8 +45,8 @@ class UsersDB(object):
         if sever_keys:
             merged_keys = []
             for server_key in sever_keys:
-                if "account" in server_key:
-                    account_key = self.lookup_key_db.get(server_key.pop("account"))
+                if "user" in server_key:
+                    account_key = self.lookup_key_db.get(server_key.pop("user"))
                     merged_keys += self._concat_keys(user_name, account_key, server_key)
                 elif "team" in server_key:
                     pass
@@ -59,18 +59,19 @@ class UsersDB(object):
             return self._concat_keys(user_name, user_keys=user_keys)
 
     @staticmethod
-    def _merge_user(user_user_db, user_server_db,):
+    def _merge_user(user_user_db, user_server_db):
         merged_user = dict(user_user_db.items() + user_server_db.items())
-        merged_user.pop("keys", None)
         return merged_user
 
     def expand_servers(self):
         # Advanced mode Merges users and servers data
         # Expand server will overwrite same attributes defined in user db except for state = "absent"
         for user_server in self.servers_db:
+
             user_server_keys = None
             # 1st lets get the user/team dictionary from the user db
             user_name = user_server.get("user") or user_server.get("name", False)
+
             user_definition = self.users_db.get(user_name)
             team_definition = user_server.get("team", False)
             if user_name:
@@ -86,8 +87,10 @@ class UsersDB(object):
                 # TODO: Should expand teams
                 self.module.fail_json(msg="Team is not yet implemented")
             else:
-                self.module.fail_json(msg="Your server definition has no user or team. Please check your data type.")
+                self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. "
+                                          "for '{}'".format(user_server))
             # Populate DBs
+            user_server.pop("keys", None)  # Get rid of keys
             self.expanded_server_db.append(user_server)
             self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
@@ -131,13 +134,12 @@ class UsersDB(object):
 
     def main(self):
         self.expand_users()
-
         if self.servers_db and self.servers_db[0] != "False":
             # Advanced mode we have to do merges and stuff :D
             self.expand_servers()
             result = {"changed": False, "msg": "",
                       "users_db": self.expanded_server_db,
-                      "key_db": self.expanded_users_key_db}
+                      "key_db": self.expanded_server_key_db}
         else:
             # Simple mode no servers db
             result = {"changed": False, "msg": "",
@@ -150,7 +152,7 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             usersdb=dict(default=None, required=True, type="dict"),
-            teamsdb=dict(default=None, required=False, type=None),  # Should be dict but would break if value is false/none
+            teamsdb=dict(default=None, required=False, type=None), # Should be dict but would break if value is false/none
             serversdb=dict(default=None, required=False, type="list"),
         ),
         supports_check_mode=False
