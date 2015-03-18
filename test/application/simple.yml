@@ -6,6 +6,6 @@
   connection   : local
 
   vars_files   :
-                 - "simple_user_db.yml"
+                 - "simple_var_user_db.yml"
   roles        :
                  - "ansible-usermanage"

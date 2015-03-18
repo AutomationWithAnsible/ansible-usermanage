@@ -7,7 +7,7 @@
   vars         :
                  usermanage_debug : true
   vars_files   :
-                 - "advanced_user_db.yml"
-                 - "advanced_server_db.yml"
+                 - "advanced_var_user_db.yml"
+                 - "advanced_var_server_db.yml"
   roles        :
                  - "ansible-usermanage"
