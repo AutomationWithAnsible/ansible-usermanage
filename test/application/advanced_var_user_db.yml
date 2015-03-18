@@ -21,7 +21,7 @@ usermanage_usersdb:
     home: /opt/stewart
     keys:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhiDPE4S4K6AGJFRSIB5xVoIlKtgjVUVHK1WhT0hD/I3nZ3AFszqDXUz4eREDlPSfMsvNCuAd1Mxwg2vx1Udbzf0M5OH1DDgYyVeJXXB5/B2rpX7vm0A1Hxx17mMHg9OrCNKNn8B83g6IqAGM6P3VKHqnRQ9kLpPcki65gMx06R2dQ1Dh5kks2yOjyx7Mjut0rL9Ig/b9ysMMC1YjMupC8vb31Dhy8pVi1F/RT/7M6PwM4Kjh3fdzgqvQRxDrmky8kbXJj+TXU6pIM1mZtZyENddUCA0rDNtpi6yIaAR9aJkcPXxPpblkWjYAO++sukz88BKWt0Z+nLx9JUhwXtoW7 stewart1"
-  vodaka:
+  vodka:
     comment: "Savvy Vodka"
     keys:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2Pq3M7AgeBjmNII6HGsKd2uaXFIfaljpNg1Rf6y3iGP84wC82bMfZTSIhnzJ4qwHj7Bzn8oiMmqtyeGcmEwLXm5f7mk3lj9NmxUEfbuWsPoSX4VHIney0F2cjrYRAHua8vZ50OrqYvRaBNttx+pCsub/Kw/t91PQvz7s5ML12DfhlfbE5f/g+ZrKHBxsn6Vw0VqN1Cx5cecaN+9NbdwTV25/RVsXC6v9TQlIqWR+znt4ZVxUSCTAbGc51tmauoleZee2XBkAO7xmJ7zPQEndhErq/zm0euZGx1xGIjQ7dVBK8t1ah2UdBS4pSHgjhDulo0hr4gIubQ0FSV+8cWCNN vodka1"
