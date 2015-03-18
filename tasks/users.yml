@@ -6,6 +6,7 @@
     append=True
   args: "{{ item }}"
   with_items: cuser.users_db
+  when: cuser is defined
 
 - name: users | Manage authorized_keys for users
   authorized_key:
@@ -17,3 +18,4 @@
       - keys
   register: keyrc
   failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
+  when: cuser is defined
