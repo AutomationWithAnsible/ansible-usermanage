@@ -1,6 +1,8 @@
 ansible-usermanage
 ===
 
+[![Build Status](https://travis-ci.org/ahelal/ansible-usermanage.svg?branch=master)](https://travis-ci.org/ahelal/ansible-usermanage)
+
 ## NOTE 
 *Major rewrite is going on so please hold on :) or use stable release* 
 
