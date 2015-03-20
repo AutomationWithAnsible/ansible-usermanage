@@ -1,22 +1,11 @@
 ---
 
-- name: main | Compile effective users
-  usersdb:
-    usersdb: "{{ usermanage_usersdb }}"
-    serversdb: "{{ usermanage_servers }}"
-    teamsdb: "{{ usermanage_teamsdb }}"
-  register: cuser
-  connection: local
-  sudo: no
-
 - include: sources.yml
-  when: usermanage_user_source_files is defined and usermanage_user_source_files is not none
 
 - include: debug.yml
   when: usermanage_debug
 
-- include: groups.yml
-  when: usermanage_groupsdb is defined and usermanage_groupsdb is not none
+#- include: groups.yml
 
 - include: users.yml
 

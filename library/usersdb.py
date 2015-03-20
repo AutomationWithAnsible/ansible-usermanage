@@ -7,6 +7,7 @@ class UsersDB(object):
         self.users_db = self.module.params["usersdb"]
         self.teams_db = self.module.params["teamsdb"]
         self.servers_db = self.module.params["serversdb"]
+        self.source_user_db = self.module.params["source_userdb"]
         # Databases
         self.lookup_key_db = {}  # used for quick lookup
         self.expanded_users_db = []  # Used in simple mode
@@ -80,7 +81,7 @@ class UsersDB(object):
         for user_server in self.servers_db:
             user_server_keys = None
             # 1st lets get the user/team dictionary from the user db
-            user_name = user_server.get("user") or user_server.get("name", False)
+            user_name = user_server.get("user", False) or user_server.get("name", False)
             user_definition = self.users_db.get(user_name)
             team_definition = user_server.get("team", False)
             if user_name:
@@ -126,6 +127,10 @@ class UsersDB(object):
         return user_keys
 
     def expand_users(self):
+        # If we have to userdb and source db lets merge them
+        if self.source_user_db:
+            self.users_db += self.source_user_db
+
         # Get User database which is a dic and create expendaded_user_db and key_db
         # Put keys in right dictionary format
         for username, user_options in self.users_db.iteritems():
@@ -144,7 +149,8 @@ class UsersDB(object):
 
     def main(self):
         self.expand_users()
-        if self.servers_db and self.servers_db[0] != "False":
+
+        if self.servers_db and len(self.servers_db) > 0:
             # Advanced mode we have to do merges and stuff :D
             self.expand_servers()
             result = {"changed": False, "msg": "",
@@ -162,8 +168,9 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             usersdb=dict(default=None, required=True, type="dict"),
+            source_userdb=dict(default=None, required=False, type="dict"),
             teamsdb=dict(default=None, required=False, type=None), # Should be dict but would break if value is false/none
-            serversdb=dict(default=None, required=False, type="list"),
+            serversdb=dict(default=None, required=False, type=list),
         ),
         supports_check_mode=False
     )

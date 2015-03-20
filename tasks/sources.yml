@@ -1,13 +1,21 @@
 ---
-- name: source | Load users db from file/dir/databags
+
+- name: sources | Load users db from a path
   load_user_files:
     path="{{ usermanage_user_source_files }}"
     fact="{{ usermanage_source_facts }}"
     databag={{ usermanage_user_source_databag }}
-  register: loadvar
+  register: loaded_users_db
   connection: local
   sudo: no
+  when: usermanage_user_source_files is defined and usermanage_user_source_files is not none
 
-- debug:
-   var=loadvar[usermanage_source_facts]
-
+- name: sources | Compile effective users
+  usersdb:
+    usersdb: "{{ usermanage_usersdb }}"
+    serversdb: "{{ usermanage_servers | default(omit) }}"
+    teamsdb: "{{ usermanage_teamsdb | default(omit) }}"
+    source_userdb: "{{ loaded_users_db[usermanage_source_facts] | default(omit) }}"
+  register: cuser
+  connection: local
+  sudo: no

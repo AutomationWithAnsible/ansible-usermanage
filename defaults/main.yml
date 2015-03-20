@@ -1,9 +1,9 @@
 ---
 # You should override those variables, Have a look at readme.md for examples
-usermanage_usersdb                          :
-usermanage_servers                          :
-usermanage_teamsdb                          :
-usermanage_groupsdb                         :
+#usermanage_usersdb                          :
+#usermanage_servers                          :
+#usermanage_teamsdb                          :
+#usermanage_groupsdb                         :
 ###
 
 usermanage_user_source_files                :       # if you want to include a yaml&json/json file or chef databag
@@ -17,11 +17,10 @@ usermanage_default_group                    : false  # If your not creating a pe
 ## /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
 ## if you want to use debug use the limit to one server than delete the tempfile
 ## for more info look at the debug users task in the role
-usermanage_debug                       : false
-usermanage_debug_level                 : 2  # support 1 or 2 for now
-usermanage_debug_dir                   : /tmp/usermanage_debug/
-
+usermanage_debug                            : false
+usermanage_debug_level                      : 2  # support 1 or 2 for now
+usermanage_debug_dir                        : /tmp/usermanage_debug/
 # var_dir
-usermanage_source_facts                : "user_files"
+usermanage_source_facts                     : "user_files"
 
 

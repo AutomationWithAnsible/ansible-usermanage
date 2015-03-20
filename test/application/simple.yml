@@ -4,7 +4,8 @@
   gather_facts : no
   sudo         : True
   connection   : local
-
+  vars         :
+                 usermanage_debug : true
   vars_files   :
                  - "simple_var_user_db.yml"
   roles        :
