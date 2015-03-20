@@ -1,0 +1,6 @@
+---
+user1_yaml:
+    comment: "User 1 yaml"
+    keys:
+      - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfIG0Zqxtj+OGordHLn82CWzRXA3++D5BdevRx7kCJE50gRhuUbc2lImBbLE+1JRlzwpg+a1AWbM1MTiHJyLbw7e4+KxfUaPxclktvrCD3xqN/Pn0ncgCcZNFrXfeP4RbHN143qzy8ri0Vn4o/3OYK9KZGkfIT+ix8TpD6804LLjrgmgFcEDxJILFNeVL187vfoGdhh/Wed4JMZSWjiXMjA9WHzFkYDWW6HhlmmjNrXQvaQTWpmDAABvP918N7LLf8KuhTcXfyWrVOCpc0jNZKOtzvScixOi2licUkJ/xlGYbirr8cmV9gS+5UzUdzMstZeiKNXkU7imcInsSk5BFv yaml1"
+    shell: /bin/true

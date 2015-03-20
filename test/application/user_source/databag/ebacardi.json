@@ -1,0 +1,19 @@
+{
+  "id": "ebacardi",
+  "action": "create",
+  "ssh_keys": [
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIg6ennnJMC9Ogw55LdVZnpfiaaQLDrAQoWPeFWOld8CCql5JDARY8N+/Zr+SxxHQBb4KqXZidE73u8srEtXcS1YTlDMLK2+KIKPb8TJl4ksChBUv3XM95VDGT0AVUy4yW8v3PTKVlSA9b8yUBOcMQfDd1wtGsyL/Hjq9m0Jev+fXUV7vsVJXtV6OQOEwH8ag6NtdgQ34FdDqCUHK+vNtzrr6zXrgUj38NeAdNlb/WlaSFUlnCiRoohTk/9m3+bcne3Q84o5AzxYvB1d7azpVQFrBQABRR/hyTr07nSdBm5x4RUY35rGT4YTSrslvY+605nZon6beoK81jmcJdi9S1 ebacardi"
+  ],
+  "groups": [
+    "group1",
+    "group2"
+  ],
+  "shell": "\/bin\/sh",
+  "vpn_password": "aoidasoidoiuasdoiasdasd",
+  "openid": "ebacardi.myopenid.com",
+  "comment": "Emilio Bacardi"
+}
+
+
+
+

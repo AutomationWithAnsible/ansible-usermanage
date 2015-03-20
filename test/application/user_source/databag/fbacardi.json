@@ -1,0 +1,15 @@
+{
+  "id": "fbacardi",
+  "action": "remove",
+  "ssh_keys": [
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnGPR+PYOR6JRpNyr2qAQBV4FPvVin+pbPZ4Mk6ZhiShOXqulrTUVsBQaqtIu2cmyBvxAZyrGh8cwhqT047pGWB1CTaAJ1ZeKISyWeirPoqq6Lc9zQubxAeHCCtCt4z6fbOZ3amxmrseoaGoV3NlyiYlN8YJl1mUOijqoKYJPpt2s8KqKPufUzJc2UCHLUtFJVa+rBgZ2DKLtmdfNpA8ZGeuZ/lvsptJndekf+oup2ia/SWqC27pdrWHEygfbs0HL6tKTwgc0sjNurEgCrgNT95yf2cOqcbDrLgHwf8rQcYA21Kf5I3fQElvhZpQ9BqHif7hTE3FovlILZGbO1Eq6f fbacardi"
+  ],
+  "groups": [
+    "group1"
+  ],
+  "shell": "\/bin\/false",
+  "vpn_password": "wadasdasdasdasdadasd",
+  "openid": "fbacardi.myopenid.com",
+  "comment": "Facundo Bacardi"
+}
+
