@@ -1,28 +1,27 @@
 ---
+# You should override those variables, Have a look at readme.md for examples
+usermanage_usersdb                          :
+usermanage_servers                          :
+usermanage_teamsdb                          :
+usermanage_groupsdb                         :
+###
 
-usermanage_default_shell                    : "/bin/bash"
-usermanage_default_home_dir_prefix          : "/home"
+usermanage_user_source_files                :       # if you want to include a yaml&json/json file or chef databag
+usermanage_user_source_databag              : false # Is this user_source opscode chef user databag
+usermanage_default_home_dir_prefix          : "/home" ## TODO: not working yet
+
 usermanage_create_per_user_group            : true   # Create a group for every user and make that their primary group (Ubuntu does not need that)
 usermanage_default_group                    : false  # If your not creating a per user group and want default primary group. set the group name here i.e. "ops" or "dev"
-
-usermanage_per_server                       : true
-##
-## Database for user
-##    fullname: User descripition (required)
-##    pubkey: ssh key for a user (required)
-##    delete: Global delete (optional)
-##           (if defined will override state of host/group var)
-
 
 ## WARNING Debug will deploy a text file on target server and dumps variable file
 ## /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
 ## if you want to use debug use the limit to one server than delete the tempfile
-## for more info look at the debug users task in the play book
+## for more info look at the debug users task in the role
 usermanage_debug                       : false
 usermanage_debug_level                 : 2  # support 1 or 2 for now
 usermanage_debug_dir                   : /tmp/usermanage_debug/
 
-# You must override those variables
-usermanage_usersdb                     : false
-usermanage_servers                     : false
-usermanage_teamsdb                     : None
+# var_dir
+usermanage_source_facts                : "user_files"
+
+
