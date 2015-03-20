@@ -11,4 +11,4 @@
   group:
   args: "{{ item }}"
   with_items: usermanage_groupsdb
-  when: usermanage_groups is defined
+  when: usermanage_groups is defined and usermanage_groupsdb is not None
