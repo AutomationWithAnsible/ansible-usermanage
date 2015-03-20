@@ -1,0 +1,13 @@
+---
+- name: source | Load users db from file/dir/databags
+  load_user_files:
+    path="{{ usermanage_user_source_files }}"
+    fact="{{ usermanage_source_facts }}"
+    databag={{ usermanage_user_source_databag }}
+  register: loadvar
+  connection: local
+  sudo: no
+
+- debug:
+   var=loadvar[usermanage_source_facts]
+
