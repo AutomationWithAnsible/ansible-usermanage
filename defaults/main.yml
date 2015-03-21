@@ -5,7 +5,6 @@
 #usermanage_teamsdb                          :
 #usermanage_groupsdb                         :
 ###
-
 usermanage_user_source_files                :       # if you want to include a yaml&json/json file or chef databag
 usermanage_user_source_databag              : false # Is this user_source opscode chef user databag
 usermanage_default_home_dir_prefix          : "/home" ## TODO: not working yet
@@ -23,4 +22,6 @@ usermanage_debug_dir                        : /tmp/usermanage_debug/
 # var_dir
 usermanage_source_facts                     : "user_files"
 
-
+# Temp solution to with_items and when condition issue
+default_temp_solution                       :
+                                               - user: "x"
