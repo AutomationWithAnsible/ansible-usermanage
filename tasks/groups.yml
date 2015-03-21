@@ -1,10 +1,4 @@
 ---
-- debug: var=cuser.users_db
-- name: groups | debug
-  debug:
-    msg="{{ item.name | default(item.user) }}"
-  with_items: cuser.users_db | default(default_temp_solution)
-  when: usermanage_create_per_user_group and cuser.users_db is defined
 
 - name: groups | Create per user group
   group:
