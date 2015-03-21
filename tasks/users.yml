@@ -1,12 +1,11 @@
 ---
-
 - name: users | Create users
   user:
     force=yes
     append=True
   args: "{{ item }}"
-  with_items: cuser.users_db
-  when: cuser is defined
+  with_items: cuser.users_db | default([])
+  when: cuser.users_db is defined
 
 - name: users | Manage authorized_keys for users
   authorized_key:
@@ -14,8 +13,8 @@
      manage_dir="yes"
   args: "{{ item.1 }}"
   with_subelements:
-      - cuser.key_db
+      - cuser.key_db | default([])
       - keys
   register: keyrc
   failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
-  when: cuser is defined
+  when: cuser.key_db is defined

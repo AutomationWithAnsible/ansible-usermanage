@@ -5,8 +5,10 @@ echo "**** Box setup ***"
 echo "* mkdir /kitchen"
 mkdir /kitchen
 
-echo "* cp -ar /mnt/shared /kitchen"
-cp -r /mnt/shared/. /kitchen
+#echo "* cp -ar /mnt/shared /kitchen"
+#cp -r /mnt/shared/. /kitchen
+echo "* ln -s /mnt/shared /kitchen"
+ln -s /mnt/shared/* /kitchen/
 
 echo "* cd /kitchen"
 cd /kitchen/*

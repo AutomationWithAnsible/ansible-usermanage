@@ -12,10 +12,11 @@
 
 - name: sources | Compile effective users
   usersdb:
-    usersdb: "{{ usermanage_usersdb }}"
+    usersdb: "{{ usermanage_usersdb | default(omit) }}"
     serversdb: "{{ usermanage_servers | default(omit) }}"
     teamsdb: "{{ usermanage_teamsdb | default(omit) }}"
     source_userdb: "{{ loaded_users_db[usermanage_source_facts] | default(omit) }}"
   register: cuser
   connection: local
   sudo: no
+  when: usermanage_usersdb is defined or loaded_users_db[usermanage_source_facts] is defined
