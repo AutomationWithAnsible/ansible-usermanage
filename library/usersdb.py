@@ -9,7 +9,7 @@ class UsersDB(object):
         # If we have to userdb and source db lets merge them if not
         if self.users_db and self.source_user_db:
             self.users_db += self.source_user_db
-        if self.users_db and not self.source_user_db:
+        if self.source_user_db and not self.users_db:
             self.users_db = self.source_user_db
         if not self.users_db and not self.source_user_db:
             self.module.fail_json(msg="Missing argument. You must defined either 'usersdb' or 'source_userdb'.")
