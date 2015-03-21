@@ -1,5 +1,5 @@
 ---
-- name         : Group  (1)
+- name         : Group (1)
   hosts        : all
   gather_facts : no
   sudo         : True

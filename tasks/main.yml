@@ -5,7 +5,7 @@
 - include: debug.yml
   when: usermanage_debug
 
-#- include: groups.yml
+- include: groups.yml
 
 - include: users.yml
 

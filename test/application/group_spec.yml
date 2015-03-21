@@ -1,0 +1,40 @@
+---
+- name         : Group Spec (1)
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  connection   : local
+  vars:
+    assert_no_logs: True
+    tests:
+       - name: Check group1
+         group:
+            name   : "group1"
+            gid    : "5000"
+            system : "true"
+         assert:
+            - "changed == false"
+
+       - name: Check group2
+         group:
+            name   : "group2"
+            gid    : "5001"
+            system : "false"
+         assert:
+            - "changed == false"
+
+       - name: Check group3
+         group:
+            name   : "group2"
+         assert:
+            - "changed == false"
+
+       - name: Check group4
+         group:
+            name   : "group4"
+            state  : "absent"
+         assert:
+            - "changed == false"
+
+  roles:
+    - role : ansible-spec
