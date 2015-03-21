@@ -9,11 +9,28 @@ before_install:
 
 install:
   - sudo pip install ansible
-  - git clone https://github.com/ahelal/ansible-spec ../ansible-spec
+  - >
+    [ ! -d ../ansible-spec ]
+    && git clone https://github.com/ahelal/ansible-spec ../ansible-spec && echo "ansible-spec Installing"
+    || echo "ansible-spec allready installed"
 
 script:
     - cd test
     - ansible --version
+    ## Group
+    # 1st: check syntax
+    - ansible-playbook -i local.ini application/group.yml --syntax-check
+    # 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/group.yml --sudo -vvvv
+    # 3rd:  Make sure our playbook is idempotent
+    - >
+      ansible-playbook -i local.ini application/group.yml --sudo -vvvv | tee ansible_output
+      | grep -q 'changed=0.*failed=0'
+      && (echo 'Idempotence test: pass' && exit 0)
+      || (echo 'Idempotence test: fail' && exit 1)
+    # 4th: run test make sure module spit it right data
+    - ansible-playbook -i local.ini application/group_spec.yml --sudo -vvvv -C
+
     ## Simple
     # 1st: check syntax
     - ansible-playbook -i local.ini application/simple.yml --syntax-check
