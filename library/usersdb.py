@@ -5,9 +5,11 @@ class UsersDB(object):
     def __init__(self, module):
         self.module = module
         self.users_db = self.module.params["usersdb"]
+        self.source_user_db = self.module.params["source_userdb"]
+        if not self.users_db and not self.source_user_db:
+            self.module.fail_json(msg="Missing argument. You must defined either 'usersdb' or 'source_userdb'.")
         self.teams_db = self.module.params["teamsdb"]
         self.servers_db = self.module.params["serversdb"]
-        self.source_user_db = self.module.params["source_userdb"]
         # Databases
         self.lookup_key_db = {}  # used for quick lookup
         self.expanded_users_db = []  # Used in simple mode
@@ -29,7 +31,6 @@ class UsersDB(object):
         elif server_keys:
             # server key is dic
             server_keys.pop("name", None)
-            #server_keys.update({"user": user_name})
             new_user_keys = [server_keys]
         elif user_keys:
             for user_key in user_keys:
@@ -167,10 +168,10 @@ class UsersDB(object):
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            usersdb=dict(default=None, required=True, type="dict"),
+            usersdb=dict(default=None, required=False, type="dict"),
             source_userdb=dict(default=None, required=False, type="dict"),
-            teamsdb=dict(default=None, required=False, type=None), # Should be dict but would break if value is false/none
-            serversdb=dict(default=None, required=False, type=list),
+            teamsdb=dict(default=None, required=False), # Should be dict but would break if value is false/none
+            serversdb=dict(default=None, required=False),
         ),
         supports_check_mode=False
     )
