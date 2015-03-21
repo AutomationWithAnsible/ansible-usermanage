@@ -6,8 +6,14 @@ class UsersDB(object):
         self.module = module
         self.users_db = self.module.params["usersdb"]
         self.source_user_db = self.module.params["source_userdb"]
+        # If we have to userdb and source db lets merge them if not
+        if self.users_db and self.source_user_db:
+            self.users_db += self.source_user_db
+        if self.users_db and not self.source_user_db:
+            self.users_db = self.source_user_db
         if not self.users_db and not self.source_user_db:
             self.module.fail_json(msg="Missing argument. You must defined either 'usersdb' or 'source_userdb'.")
+
         self.teams_db = self.module.params["teamsdb"]
         self.servers_db = self.module.params["serversdb"]
         # Databases
@@ -128,10 +134,6 @@ class UsersDB(object):
         return user_keys
 
     def expand_users(self):
-        # If we have to userdb and source db lets merge them
-        if self.source_user_db:
-            self.users_db += self.source_user_db
-
         # Get User database which is a dic and create expendaded_user_db and key_db
         # Put keys in right dictionary format
         for username, user_options in self.users_db.iteritems():
