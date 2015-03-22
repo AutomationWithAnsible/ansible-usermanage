@@ -1,0 +1,58 @@
+---
+- name         : Source files yaml and json
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  connection   : local
+  vars:
+    assert_no_logs: True
+    tests:
+       - name: Check user bbreezer
+         user:
+            name    : "bbreezer"
+            comment : "Bacardi Breezer"
+            shell   : /bin/bash
+            system  : true
+            groups  : "group2,group1,ops"
+         assert:
+            - "changed == false"
+       - name: Check user bbreezer 1st key
+         authorized_key:
+            user: "bbreezer"
+            key: ""ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCun7TGUhQ1JoWkdtroI4ufEnf/cPWn5mIitu8+eTtMK/yS71CuEhf8f6IkKMuSd5L9PHiIAYd0o87pJ952sUsDdLpk7NPhxVod7ADa7uC+FnFrJ0tgyUlPpe0XC77H1T9abpQ2fAOsC5F+fuWQSBxJyczS6tOIz7b25SUBSTA5ObM4bP0LEE2CJ4uegNpmPn73LAhYgRU43VCH4+w7QmNUHdhkcuVIVNiK2Kt7o3KXP8OjbrdQLCdG2aCMEITrTljHPazhbAgkMnEKLY28fWJpJTIzRCSdEXhdsJMS/nzszPCXvJiol6xOvbcYooYg9c9auMQJUn7EpR062VmlPXuP bbreezer1"
+         assert:
+            - "changed == false"
+
+       - name: Check user ebacardi
+         user:
+            name    : "ebacardi"
+            groups  : "group1,group2"
+            shell   : /bin/sh
+            comment : "Emilio Bacardi"
+         assert:
+            - "changed == false"
+       - name: Check user ebacardi 1st key
+         authorized_key:
+            user: "ebacardi"
+            key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIg6ennnJMC9Ogw55LdVZnpfiaaQLDrAQoWPeFWOld8CCql5JDARY8N+/Zr+SxxHQBb4KqXZidE73u8srEtXcS1YTlDMLK2+KIKPb8TJl4ksChBUv3XM95VDGT0AVUy4yW8v3PTKVlSA9b8yUBOcMQfDd1wtGsyL/Hjq9m0Jev+fXUV7vsVJXtV6OQOEwH8ag6NtdgQ34FdDqCUHK+vNtzrr6zXrgUj38NeAdNlb/WlaSFUlnCiRoohTk/9m3+bcne3Q84o5AzxYvB1d7azpVQFrBQABRR/hyTr07nSdBm5x4RUY35rGT4YTSrslvY+605nZon6beoK81jmcJdi9S1 ebacardi"
+         assert:
+            - "changed == false"
+
+       - name: Check user fbacardi
+         user:
+            name    : "fbacardi"
+            shell   : /bin/sh
+            groups  : "group1"
+            state   : "absent"
+            comment : "Facundo Bacardi"
+         assert:
+            - "changed == false"
+       - name: Check user fbacardi 1st key
+         authorized_key:
+            user: "fbacardi"
+            key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnGPR+PYOR6JRpNyr2qAQBV4FPvVin+pbPZ4Mk6ZhiShOXqulrTUVsBQaqtIu2cmyBvxAZyrGh8cwhqT047pGWB1CTaAJ1ZeKISyWeirPoqq6Lc9zQubxAeHCCtCt4z6fbOZ3amxmrseoaGoV3NlyiYlN8YJl1mUOijqoKYJPpt2s8KqKPufUzJc2UCHLUtFJVa+rBgZ2DKLtmdfNpA8ZGeuZ/lvsptJndekf+oup2ia/SWqC27pdrWHEygfbs0HL6tKTwgc0sjNurEgCrgNT95yf2cOqcbDrLgHwf8rQcYA21Kf5I3fQElvhZpQ9BqHif7hTE3FovlILZGbO1Eq6f fbacardi"
+            state: "absent"
+         assert:
+            - "changed == false"
+  roles:
+    - role : ansible-spec

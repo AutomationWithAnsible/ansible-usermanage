@@ -1,0 +1,11 @@
+---
+- name         : Sources files
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  connection   : local
+  vars         :
+                 usermanage_user_source_files: "./user_source/yaml&json/"
+                 usermanage_debug : true
+  roles        :
+                 - "ansible-usermanage"

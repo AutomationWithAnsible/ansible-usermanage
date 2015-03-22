@@ -59,6 +59,33 @@ script:
     # 4th: run test make sure module spit it right data
     - ansible-playbook -i local.ini application/advanced_spec.yml --sudo -vvvv -C --diff
 
+    ## Source file yaml and json
+    # 1st: check syntax
+    - ansible-playbook -i local.ini application/source_files.yml --syntax-check
+    # 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/source_files.yml --sudo -vvvv
+    # 3rd:  Make sure our playbook is idempotent
+    - >
+      ansible-playbook -i local.ini application/source_files.yml --sudo -vvvv | tee ansible_output
+      | grep -q 'changed=0.*failed=0'
+      && (echo 'Idempotence test: pass' && exit 0)
+      || (echo 'Idempotence test: fail' && exit 1)
+    # 4th: run test make sure module spit it right data
+    - ansible-playbook -i local.ini application/source_files_specs.yml --sudo -vvvv -C --diff
+
+    ## Source databag
+    # 1st: check syntax
+    - ansible-playbook -i local.ini application/source_databag.yml --syntax-check
+    # 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/source_databag.yml --sudo -vvvv
+    # 3rd:  Make sure our playbook is idempotent
+    - >
+      ansible-playbook -i local.ini application/source_databag.yml --sudo -vvvv | tee ansible_output
+      | grep -q 'changed=0.*failed=0'
+      && (echo 'Idempotence test: pass' && exit 0)
+      || (echo 'Idempotence test: fail' && exit 1)
+    # 4th: run test make sure module spit it right data
+    - ansible-playbook -i local.ini application/source_databag_specs.yml --sudo -vvvv -C --diff
 
 after_failure:
     - echo "Failure"
