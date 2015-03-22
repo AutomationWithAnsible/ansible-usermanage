@@ -60,6 +60,9 @@ class LoadVarDir(object):
                     new_data["state"] = "present"
                 elif chef_action == "remove":
                     new_data["state"] = "absent"
+            chef_groups = new_data.get("groups", False)
+            if chef_groups:
+                new_data["groups"] = ",".join(chef_groups)
 
             return {user_name: new_data}
 
