@@ -8,7 +8,7 @@ class UsersDB(object):
         self.source_user_db = self.module.params["source_userdb"]
         # If we have to userdb and source db lets merge them if not
         if self.users_db and self.source_user_db:
-            self.users_db += self.source_user_db
+            self.users_db.update(self.source_user_db)
         if self.source_user_db and not self.users_db:
             self.users_db = self.source_user_db
         if not self.users_db and not self.source_user_db:
