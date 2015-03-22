@@ -85,7 +85,7 @@ script:
       && (echo 'Idempotence test: pass' && exit 0)
       || (echo 'Idempotence test: fail' && exit 1)
     # 4th: run test make sure module spit it right data
-    - ansible-playbook -i local.ini application/source_databag_specs.yml --sudo -vvvv -C --diff
+    - ansible-playbook -i local.ini application/source_databag_spec.yml --sudo -vvvv -C --diff
 
 after_failure:
     - echo "Failure"
