@@ -21,6 +21,7 @@ class LoadVarDir(object):
                             "action": "state",
                             "system": "system",
                             "uid": "uid",
+                            "ssh_keys":  "keys"
                             }
         self.file_data = {}
 
@@ -52,6 +53,14 @@ class LoadVarDir(object):
                 if data_bag_item_value:
                     ansible_key = self.mapping.get(mapping_key)
                     new_data.update({ansible_key: data_bag_item_value})
+            # Check for an action
+            chef_action = new_data.get("state", False)
+            if chef_action:
+                if chef_action == "create":
+                    new_data["state"] = "present"
+                elif chef_action == "remove":
+                    new_data["state"] = "absent"
+
             return {user_name: new_data}
 
     def _read_path(self):
