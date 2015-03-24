@@ -71,7 +71,7 @@ usermanage_create_per_user_group            : true
 ```
 
 ### Users DB Sources
-#TODO
+** TODO **
 
 ### Advanced mode
 ToDo document
