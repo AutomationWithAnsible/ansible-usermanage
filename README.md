@@ -45,7 +45,33 @@ Basically **usermanage_usersdb** is a dictionary of users each user will accept 
 A special arugment **keys** which is a list of keys that will be created for that user, each key can accept all options defined in [authorized key module](http://docs.ansible.com/authorized_key_module.html)
 
 ### Group Management
-ToDo document
+To manage groups you can define **usermanage_groupsdb** as a **list**. You must define atleast the *name* of group and optional state,gid and system.
+
+```yaml
+usermanage_groupsdb  :
+      - name         : "group1"
+        state        : "present"
+        gid          : "5000"
+        system       : "true"
+
+      - name         : "group2"
+        state        : "present"
+        gid          : "5001"
+        system       : "false"
+
+      - name         : "group3"
+
+      - name         : "group4"
+        state        : "absent"
+```
+
+Some *nix system does not support creating the primary group for each user with the same name. If you want to enable that functionality for systems that does not support it. just enable that flag.
+```yaml
+usermanage_create_per_user_group            : true 
+```
+
+### Users DB Sources
+#TODO
 
 ### Advanced mode
 ToDo document
