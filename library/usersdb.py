@@ -58,8 +58,8 @@ class UsersDB(object):
             merged_keys = []
             for server_key in sever_keys:
                 if "user" in server_key:
+                    user = server_key.pop("user", False)
                     # TODO: if username is wrong will not fail should fail
-                    user = server_key.pop("user")
                     account_key = self.lookup_key_db.get(user)
                     user_definition = self.users_db.get(user, {})
                     if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
@@ -75,42 +75,51 @@ class UsersDB(object):
         else:
             return self._concat_keys(user_name, user_keys=user_keys, user_status=user_status)
 
-    @staticmethod
-    def _merge_user(user_user_db, user_server_db, user_status=False):
-        merged_user = dict(user_user_db.items() + user_server_db.items())
+    # @staticmethod
+    # def _merge_user(user_user_db, user_server_db, user_status=False):
+    #     merged_user = dict(user_user_db.items() + user_server_db.items())
+    #     if user_status:
+    #         merged_user.update({"state": "absent"})
+#        return merged_user
+
+    def _merge_user(self, user_name, user_server):
+        user_definition = self.users_db.get(user_name)
+        if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
+            user_status = "absent"
+        else:
+            user_status = False
+
+        # Merge User and Server ( Server has precedence in this case )
+        #user_server = self._merge_user(user_definition, user_server, user_status)
+        merged_user = dict(user_definition.items() + user_server.items())
         if user_status:
             merged_user.update({"state": "absent"})
-        return merged_user
+        user_server = merged_user
+
+
+        user_db_key = self.lookup_key_db.get(user_name, None)
+        user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name, user_status)
+
+        # Populate DBs
+        user_server.pop("keys", None)  # Get rid of keys
+        self.expanded_server_db.append(user_server)
+        self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
     def expand_servers(self):
         # Advanced mode Merges users and servers data
         # Expand server will overwrite same attributes defined in user db except for state = "absent"
         for user_server in self.servers_db:
-            user_server_keys = None
-            # 1st lets get the user/team dictionary from the user db
-            user_name = user_server.get("user", False) or user_server.get("name", False)
-            user_definition = self.users_db.get(user_name)
             team_definition = user_server.get("team", False)
-            if user_name:
-                if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
-                    user_status = "absent"
-                else:
-                    user_status = False
+            user_name = user_server.get("user", False) or user_server.get("name", False)
 
-                # Merge User and Server ( Server has precedence in this case )
-                user_server = self._merge_user(user_definition, user_server, user_status)
-                user_db_key = self.lookup_key_db.get(user_name, None)
-                user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name, user_status)
+            if user_name:
+                self._merge_user(user_name, user_server)
             elif team_definition:
                 # TODO: Should expand teams
                 self.module.fail_json(msg="Team is not yet implemented")
             else:
                 self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. "
                                           "for '{}'".format(user_server))
-            # Populate DBs
-            user_server.pop("keys", None)  # Get rid of keys
-            self.expanded_server_db.append(user_server)
-            self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
     def expand_keys(self, keys, user):
         if len(keys) == 0:
