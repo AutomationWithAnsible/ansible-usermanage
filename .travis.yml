@@ -5,7 +5,7 @@ python: "2.7"
 before_install:
   # Make sure everything's up to date.
   - sudo apt-get update -qq
-  - sudo apt-get install -qq python-apt python-pycurl git
+  - sudo apt-get install -qq python-apt python-pycurl git python-pip
 
 install:
   - sudo pip install ansible
@@ -86,6 +86,20 @@ script:
       || (echo 'Idempotence test: fail' && exit 1)
     # 4th: run test make sure module spit it right data
     - ansible-playbook -i local.ini application/source_databag_spec.yml --sudo -vvvv -C --diff
+
+    ## Source team
+    # 1st: check syntax
+    - ansible-playbook -i local.ini application/team.yml --syntax-check
+    # 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/team.yml --sudo -vvvv
+    # 3rd:  Make sure our playbook is idempotent
+    - >
+      ansible-playbook -i local.ini application/team.yml --sudo -vvvv | tee ansible_output
+      | grep -q 'changed=0.*failed=0'
+      && (echo 'Idempotence test: pass' && exit 0)
+      || (echo 'Idempotence test: fail' && exit 1)
+    # 4th:
+    - ansible-playbook -i local.ini application/team_spec.yml --sudo -vvvv -C --diff
 
 after_failure:
     - echo "Failure"
