@@ -1,0 +1,12 @@
+---
+- name         : Team (1)
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  connection   : local
+  vars:
+                usermanage_debug : true
+  vars_files   :
+                 - "team_var_db.yml"
+  roles        :
+                 - "ansible-usermanage"

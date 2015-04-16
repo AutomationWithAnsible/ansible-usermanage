@@ -59,14 +59,13 @@ class UsersDB(object):
             for server_key in sever_keys:
                 if "user" in server_key:
                     user = server_key.pop("user", False)
-                    # TODO: if username is wrong will not fail should fail
                     account_key = self.lookup_key_db.get(user)
                     user_definition = self.users_db.get(user, {})
                     if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
                         user_status = "absent"
                     merged_keys += self._concat_keys(user_name, account_key, server_key, user_status=user_status)
                 elif "team" in server_key:
-                    pass
+                    self.module.fail_json(msg="Team key is not yet implemented")
                 elif "key" in server_key:
                     merged_keys += self._concat_keys(user_name, server_keys=server_key, user_status=user_status)
                 else:
@@ -75,33 +74,31 @@ class UsersDB(object):
         else:
             return self._concat_keys(user_name, user_keys=user_keys, user_status=user_status)
 
-    # @staticmethod
-    # def _merge_user(user_user_db, user_server_db, user_status=False):
-    #     merged_user = dict(user_user_db.items() + user_server_db.items())
-    #     if user_status:
-    #         merged_user.update({"state": "absent"})
-#        return merged_user
-
     def _merge_user(self, user_name, user_server):
-        user_definition = self.users_db.get(user_name)
+        user_definition = self.users_db.get(user_name, False)
+
+        if not user_definition:
+            self.module.fail_json(msg="'%s' user has no definition" % user_name)
+
         if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
             user_status = "absent"
         else:
             user_status = False
 
         # Merge User and Server ( Server has precedence in this case )
-        #user_server = self._merge_user(user_definition, user_server, user_status)
         merged_user = dict(user_definition.items() + user_server.items())
+
         if user_status:
             merged_user.update({"state": "absent"})
         user_server = merged_user
-
-
         user_db_key = self.lookup_key_db.get(user_name, None)
         user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name, user_status)
+        # In case of team user dict will not be defined so lets just define anyway
+        user_server.update({"user": user_name})
 
         # Populate DBs
         user_server.pop("keys", None)  # Get rid of keys
+        user_server.pop("team", None)  # Get rid of team if exists
         self.expanded_server_db.append(user_server)
         self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
@@ -109,14 +106,17 @@ class UsersDB(object):
         # Advanced mode Merges users and servers data
         # Expand server will overwrite same attributes defined in user db except for state = "absent"
         for user_server in self.servers_db:
-            team_definition = user_server.get("team", False)
+            team_name = user_server.get("team", False)
             user_name = user_server.get("user", False) or user_server.get("name", False)
 
             if user_name:
                 self._merge_user(user_name, user_server)
-            elif team_definition:
-                # TODO: Should expand teams
-                self.module.fail_json(msg="Team is not yet implemented")
+            elif team_name:
+                team_definition = self.teams_db.get(team_name, False)
+                if not team_definition:
+                    self.module.fail_json(msg="'%s' team has no definition" % team_name)
+                for user_in_team in team_definition:
+                    self._merge_user(user_in_team, user_server)
             else:
                 self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. "
                                           "for '{}'".format(user_server))
