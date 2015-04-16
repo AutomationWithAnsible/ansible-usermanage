@@ -1,14 +1,7 @@
 ---
 
-- name: groups | Create per user group
-  group:
-    name="{{ item.name  | default(item.user) }}"
-    state="{{ item.state | default("present") }}"
-  with_items: cuser.users_db | default(default_temp_solution)
-  when: usermanage_create_per_user_group and cuser.users_db is defined
-
 - name: groups | Create groups
   group:
   args: "{{ item }}"
-  with_items: usermanage_groupsdb | default([])
-  when: usermanage_groupsdb is defined and usermanage_groupsdb is not none
+  with_items: usermanage_groupsdb | default(default_temp_solution)
+  when: usermanage_groupsdb

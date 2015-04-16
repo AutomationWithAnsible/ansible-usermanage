@@ -32,3 +32,9 @@
      dest="{{ usermanage_debug_dir }}/{{ inventory_hostname }}-{{ item.user | default(item.name) }}"
   with_items: cuser.users_db
   when: usermanage_debug_level >= 1
+
+- name: debug | Debug usermanage_groupsdb
+  debug:
+    var=usermanage_groupsdb
+  sudo: no
+  when: usermanage_debug_level >= 3 and usermanage_groupsdb is defined
