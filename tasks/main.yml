@@ -5,7 +5,11 @@
 - include: debug.yml
   when: usermanage_debug
 
+- include: per_user_group.yml
+  when: usermanage_create_per_user_group and cuser.users_db is defined
+
 - include: groups.yml
+  when: usermanage_groupsdb is defined and usermanage_groupsdb is not none
 
 - include: users.yml
 
