@@ -14,9 +14,9 @@ usermanage_usersdb:
   pepsi:
     comment: "Pepsi Cola"
     uid: 3400
+    shell: /bin/false
     keys:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCcoo+eU8+k7QYpKbZwOQwiMpeklQcmEyLTsJr0RLTeqsHkIh8rFWyMZURDZ5pgEGo3iXZD+dqM28agy2Pw68/V0wht/9n0PjmUVZgkWIas162w3vZrJENDi8wAo4ojQJf0lZf63K8AxoB12fF+QdR7jfTLrz2bCxv9XaHKm7nYGtRO0f8ETgvwpIS2jN0mPAD7qnCFvLtbaxd/UzsQS5M8Au42+9zdn78Atm7gtKY9uR5U1Jwrop8KipXf0wAtMo39Xc9P8hGbYGA1jkbcG2x1LI7G9L+PddxeZjpkW2Uv559YJDRjBJfJAfp6K4HGV5uXITSMVDY9KBYvepolrlul"
-    shell: /bin/false
   coca:
     comment: "Coca Cola"
     keys:
@@ -25,16 +25,14 @@ usermanage_usersdb:
   stewart:
     comment: "Daniel Stewart team"
     state: "absent"
-    home: /opt/stewart
     keys:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhiDPE4S4K6AGJFRSIB5xVoIlKtgjVUVHK1WhT0hD/I3nZ3AFszqDXUz4eREDlPSfMsvNCuAd1Mxwg2vx1Udbzf0M5OH1DDgYyVeJXXB5/B2rpX7vm0A1Hxx17mMHg9OrCNKNn8B83g6IqAGM6P3VKHqnRQ9kLpPcki65gMx06R2dQ1Dh5kks2yOjyx7Mjut0rL9Ig/b9ysMMC1YjMupC8vb31Dhy8pVi1F/RT/7M6PwM4Kjh3fdzgqvQRxDrmky8kbXJj+TXU6pIM1mZtZyENddUCA0rDNtpi6yIaAR9aJkcPXxPpblkWjYAO++sukz88BKWt0Z+nLx9JUhwXtoW7"
 
   raki:
     comment: "Yeni Raki team"
+    uid: 3400
     keys:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCvy3wrbh9hwSP0WrwXSFW4AujinW+xiDQn7RLJ8UcVZ+Yf4EmV6GTvjjJjIegIKjnH2xiRDjZ1qaSZzxW7/uyVxPrjhGAE8iPQAGcLEEcpg4IwlFpd3+7NgCKLdVHozH6z+h3G95otKQZLmKq9lzkfVyhDzTjU2qsnSQPitDrPY/tngN1gnZHQm2CUh4gamtOfxtPKlOqQ/t0iXJU48QfyN33XWr8M5/2FWP9jDyvxEjpCRW2Qu2+8uQONPOHMtkLW70G2+KVN90fkOXMnDotm+aY1OluUcXgrBakEctHNIWoKSUbcdOw1JkLY3Ojl11lIdXn267A1t70FaEXG8cIf"
-    uid: 3400
-
 
   label:
     comment: "Black Label team"

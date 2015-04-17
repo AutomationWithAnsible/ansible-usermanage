@@ -36,12 +36,62 @@
             groups  : "group1,group2"
          assert:
             - "changed == false"
-       - name: Check user team1 user voda 1st key
+       - name: Check user team1 user vodka 1st key
          authorized_key:
             user        : "vodka"
             key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2Pq3M7AgeBjmNII6HGsKd2uaXFIfaljpNg1Rf6y3iGP84wC82bMfZTSIhnzJ4qwHj7Bzn8oiMmqtyeGcmEwLXm5f7mk3lj9NmxUEfbuWsPoSX4VHIney0F2cjrYRAHua8vZ50OrqYvRaBNttx+pCsub/Kw/t91PQvz7s5ML12DfhlfbE5f/g+ZrKHBxsn6Vw0VqN1Cx5cecaN+9NbdwTV25/RVsXC6v9TQlIqWR+znt4ZVxUSCTAbGc51tmauoleZee2XBkAO7xmJ7zPQEndhErq/zm0euZGx1xGIjQ7dVBK8t1ah2UdBS4pSHgjhDulo0hr4gIubQ0FSV+8cWCNN"
          assert:
             - "changed == false"
+
+       - name: Check team2 user pepsi
+         user:
+            name    : "pepsi"
+            comment : "Pepsi Cola"
+            uid     : 3400
+            shell   : /bin/false
+         assert:
+            - "changed == false"
+       - name: Check user team2 user pepsi 1st key
+         authorized_key:
+            user        : "pepsi"
+            key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCcoo+eU8+k7QYpKbZwOQwiMpeklQcmEyLTsJr0RLTeqsHkIh8rFWyMZURDZ5pgEGo3iXZD+dqM28agy2Pw68/V0wht/9n0PjmUVZgkWIas162w3vZrJENDi8wAo4ojQJf0lZf63K8AxoB12fF+QdR7jfTLrz2bCxv9XaHKm7nYGtRO0f8ETgvwpIS2jN0mPAD7qnCFvLtbaxd/UzsQS5M8Au42+9zdn78Atm7gtKY9uR5U1Jwrop8KipXf0wAtMo39Xc9P8hGbYGA1jkbcG2x1LI7G9L+PddxeZjpkW2Uv559YJDRjBJfJAfp6K4HGV5uXITSMVDY9KBYvepolrlul"
+         assert:
+            - "changed == false"
+
+       - name: Check team2 user coca
+         user:
+            name    : "coca"
+            comment : "Coca Cola"
+         assert:
+            - "changed == false"
+       - name: Check user team2 user coca 1st key
+         authorized_key:
+            user       : "coca"
+            key: "ssh-rsa AAAAB3NzaC2EAA1ycAADAAAQABABAQCootXD63hexEQnbCmKGC7DjFSWxkqJ2neaC5S6POEdgwo7jQ60JWy0VCm5JS5d2ZNDQh+vi1wZ2cTr6n9X9bAkYhQ/eACmzYBjf8I8AXcqaigAOjRMLADU2qQfZmnRGyOLaGDI/EH52yBjeZHbgQdJOGrB07qgAu2facA2bd6kvI8eLwCx5yjqA+mInYEewRYrr5tUduGFdPhmyoKSGpaEeWWkLhafTj9eGRMSB3unBcMtux+LxXH4TfWgVBmWNVbr2Mcv+M6tYxix/iKniBLBUH/AfM/dTHlk38y2mjemUMUc/HBW+HmH3NXMwOks8po6Iohh8JNhywUlLKN9MvB7"
+         assert:
+            - "changed == false"
+
+       - name: Check team2 user stewart
+         user:
+            name    : "stewart"
+            state   : "absent"
+         assert:
+            - "changed == false"
+
+       - name: Check team3 user raki
+         user:
+            name    : "raki"
+            state   : "absent"
+         assert:
+            - "changed == false"
+
+       - name: Check user label
+         user:
+            name    : "label"
+            state   : "absent"
+         assert:
+            - "changed == false"
+
 
   roles:
     - role : ansible-spec
