@@ -9,10 +9,10 @@ before_install:
 
 install:
   - sudo pip install ansible
-  - mkdir -p /spec
+  - sudo mkdir -p /spec
   - >
     [ ! -d /spec/ansible-spec ]
-    && git clone https://github.com/ahelal/ansible-spec /spec/ansible-spec && echo "ansible-spec Installing"
+    && sudo git clone https://github.com/ahelal/ansible-spec /spec/ansible-spec && echo "ansible-spec Installing"
     || echo "ansible-spec allready installed"
 
 script:
