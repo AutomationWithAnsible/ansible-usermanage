@@ -10,7 +10,7 @@ usermanage_user_source_files                :       # if you want to include a y
 usermanage_user_source_databag              : false # Is this user_source opscode chef user databag
 usermanage_default_home_dir_prefix          : "/home" ## TODO: not working yet
 
-usermanage_create_per_user_group            : true   # Create a group for every user and make that their primary group (Ubuntu does not need that)
+usermanage_create_per_user_group            : false   # Create a group for every user and make that their primary group (Ubuntu does not need that)
 usermanage_default_group                    : false  # If your not creating a per user group and want default primary group. set the group name here i.e. "ops" or "dev"
 
 ## WARNING Debug will deploy a text file on target server and dumps variable file
