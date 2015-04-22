@@ -9,9 +9,10 @@ before_install:
 
 install:
   - sudo pip install ansible
+  - mkdir -p /spec
   - >
-    [ ! -d ../ansible-spec ]
-    && git clone https://github.com/ahelal/ansible-spec ../ansible-spec && echo "ansible-spec Installing"
+    [ ! -d /spec/ansible-spec ]
+    && git clone https://github.com/ahelal/ansible-spec /spec/ansible-spec && echo "ansible-spec Installing"
     || echo "ansible-spec allready installed"
 
 script:
@@ -87,7 +88,21 @@ script:
     # 4th: run test make sure module spit it right data
     - ansible-playbook -i local.ini application/source_databag_spec.yml --sudo -vvvv -C --diff
 
-    ## Source team
+    ## Mutli Source
+    # 1st: check syntax
+    - ansible-playbook -i local.ini application/multi_source_files.yml --syntax-check
+    # 2nd:  Make sure we run the entire playbook
+    - ansible-playbook -i local.ini application/multi_source_files.yml --sudo -vvvv
+    # 3rd:  Make sure our playbook is idempotent
+    - >
+      ansible-playbook -i local.ini application/multi_source_files.ymll --sudo -vvvv | tee ansible_output
+      | grep -q 'changed=0.*failed=0'
+      && (echo 'Idempotence test: pass' && exit 0)
+      || (echo 'Idempotence test: fail' && exit 1)
+    # 4th:
+    - ansible-playbook -i local.ini application/multi_source_specs.yml --sudo -vvvv -C --diff
+
+    ## Team managment
     # 1st: check syntax
     - ansible-playbook -i local.ini application/team.yml --syntax-check
     # 2nd:  Make sure we run the entire playbook
