@@ -71,6 +71,7 @@ class LoadVarDir(object):
 
             try:
                 path = path_item.get("path")
+                path = os.path.expanduser(path)
                 databag = path_item.get("databag", self.data_bag)
                 #print "all={} type={} path={} databag={}".format(path_item, type(path_item), path, databag)
             except Exception as E:
