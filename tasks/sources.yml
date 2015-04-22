@@ -2,9 +2,10 @@
 
 - name: sources | Load users db from a path
   load_user_files:
-    path="{{ usermanage_user_source_files }}"
-    fact="{{ usermanage_source_facts }}"
-    databag={{ usermanage_user_source_databag }}
+  args:
+    path: "{{ usermanage_user_source_files }}"
+    fact: "{{ usermanage_source_facts }}"
+    databag: "{{ usermanage_user_source_databag }}"
   register: loaded_users_db
   connection: local
   sudo: no

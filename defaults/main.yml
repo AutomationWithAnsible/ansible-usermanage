@@ -1,6 +1,7 @@
 ---
 # You should override those variables, Have a look at readme.md for examples
 #usermanage_usersdb                          :
+#usermanage_users_publickey                  :
 #usermanage_servers                          :
 #usermanage_teamsdb                          :
 #usermanage_groupsdb                         :

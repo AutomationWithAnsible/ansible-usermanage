@@ -5,8 +5,10 @@
   sudo         : True
   connection   : local
   vars         :
-                 usermanage_user_source_files   : "./user_source/databag/"
-                 usermanage_user_source_databag : true
+                 usermanage_user_source_files   :
+                                                  - path: "./user_source/databag/"
+                                                    databag: true
+
                  usermanage_debug               : true
                  usermanage_usersdb:
                   daniels:

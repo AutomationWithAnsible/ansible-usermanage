@@ -7,7 +7,7 @@
   with_items: cuser.users_db | default([])
   when: cuser.users_db is defined
 
-- name: users | Manage authorized_keys for users
+- name: users | Manage public key for users
   authorized_key:
      user="{{ item.0.user | default(item.0.name) }}"
      manage_dir="yes"
@@ -18,3 +18,12 @@
   register: keyrc
   failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
   when: cuser.key_db is defined
+
+- name: users | Manage private key for users
+  copy:
+     content="{{ item.pubkey }}"
+     dest="{{ cuser.users_db[item.user][home] | default(usermanage_default_home_dir_prefix + "/" + item.user) }}/.ssh/id_rsa"
+     mode=0600
+     owner="{{ item.user }}"
+  with_items: usermanage_users_publickey
+  when: usermanage_users_privkey is defined

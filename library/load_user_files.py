@@ -7,41 +7,41 @@ class LoadVarDir(object):
         self.path = self.module.params["path"]
         self.fact = self.module.params["fact"]
         self.data_bag = self.module.params["databag"]
-        if self.data_bag:
-            # Chef => Ansible mapping
-            self.mapping = {"comment": "comment",
-                            "force": "force",
-                            "gid": "group",
-                            "groups": "groups",
-                            "home": "home",
-                            "manage_home": "move_home",
-                            "non_unique": "non_unique",
-                            "password": "password",
-                            "shell": "shell",
-                            "action": "state",
-                            "system": "system",
-                            "uid": "uid",
-                            "ssh_keys":  "keys"
-                            }
+        # Chef => Ansible mapping
+        self.mapping = {"comment": "comment",
+                        "force": "force",
+                        "gid": "group",
+                        "groups": "groups",
+                        "home": "home",
+                        "manage_home": "move_home",
+                        "non_unique": "non_unique",
+                        "password": "password",
+                        "shell": "shell",
+                        "action": "state",
+                        "system": "system",
+                        "uid": "uid",
+                        "ssh_keys":  "keys"
+                        }
         self.file_data = {}
 
     def main(self):
-        self._read_path()
+        self._check_variable()
         result = {"changed": False, "msg": "Hi", self.fact: self.file_data}
         self.module.exit_json(**result)
 
-    def _read_from_file(self, file_path):
+    def _read_from_file(self, file_path, databag):
         data = parse_yaml_from_file(file_path, vault_password="")
         if data and type(data) != dict:
-            self.module.fail_json(msg="%s must be stored as a dictionary/hash".format(self.path))
+            self.module.fail_json(msg="%s must be stored as a dictionary/hash".format(file_path))
         elif data is None:
             data = {}
 
-        if self.data_bag:
+        if databag:
             data = self.convert_chef_user_data_bag(data)
         return data
 
-    def convert_chef_user_data_bag(self,data):
+    def convert_chef_user_data_bag(self, data):
+        print "data=", data
         if len(data) == 0:
             return data
         else:
@@ -66,22 +66,34 @@ class LoadVarDir(object):
 
             return {user_name: new_data}
 
-    def _read_path(self):
-        if os.path.exists(self.path):
-            if os.path.isdir(self.path):
-                for root, dirs, files in os.walk(self.path, topdown=False):
+    def _check_variable(self):
+        for path_item in self.path:
+
+            try:
+                path = path_item.get("path")
+                databag = path_item.get("databag", self.data_bag)
+                #print "all={} type={} path={} databag={}".format(path_item, type(path_item), path, databag)
+            except Exception as E:
+                self.module.fail_json(msg="Path is a list but is malformed could not get 'path' got '{}'. Error '{}'".
+                                      format(path_item, E))
+            self._follow_path(path, databag)
+
+    def _follow_path(self, path, databag):
+        if os.path.exists(path):
+            if os.path.isdir(path):
+                for root, dirs, files in os.walk(path, topdown=False):
                     for filename in files:
-                        self.file_data.update(self._read_from_file(self.path + "/" + filename))
+                        self.file_data.update(self._read_from_file(path + "/" + filename, databag))
             else:
-                self.file_data.update(self._read_from_file(self.path))
+                self.file_data.update(self._read_from_file(path, databag))
         else:
-            self.module.fail_json(msg="Failed to find path '{}'.".format(self.path))
+            self.module.fail_json(msg="Failed to find path '{}'.".format(path))
 
 
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            path=dict(default=None, required=True),
+            name=dict(default=None, aliases=["path"], required=True, type='list'),
             fact=dict(default="var_dir", required=False),
             databag=dict(default=False, type='bool')
         ),

@@ -1,0 +1,19 @@
+{
+  "id": "bbreezer",
+  "action": "remove",
+  "ssh_keys": [
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCun7TGUhQ1JoWkdtroI4ufEnf/cPWn5mIitu8+eTtMK/yS71CuEhf8f6IkKMuSd5L9PHiIAYd0o87pJ952sUsDdLpk7NPhxVod7ADa7uC+FnFrJ0tgyUlPpe0XC77H1T9abpQ2fAOsC5F+fuWQSBxJyczS6tOIz7b25SUBSTA5ObM4bP0LEE2CJ4uegNpmPn73LAhYgRU43VCH4+w7QmNUHdhkcuVIVNiK2Kt7o3KXP8OjbrdQLCdG2aCMEITrTljHPazhbAgkMnEKLY28fWJpJTIzRCSdEXhdsJMS/nzszPCXvJiol6xOvbcYooYg9c9auMQJUn7EpR062VmlPXuP bbreezer1"
+  ],
+  "groups": [
+    "group2",
+    "group1",
+    "ops"
+  ],
+  "shell": "\/bin\/bash",
+  "system": true,
+  "vpn_password": "asdasdasdad",
+  "openid": "bbreezer.myopenid.com",
+  "comment": "Bacardi Breezer"
+}
+
+

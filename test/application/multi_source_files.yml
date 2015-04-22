@@ -1,13 +1,13 @@
 ---
-- name         : Sources files
+- name         : Multi Sources files
   hosts        : all
   gather_facts : no
   sudo         : True
   connection   : local
   vars         :
                  usermanage_user_source_files:
-                                               - path: "./user_source/yaml&json/"
-                                                 databag: false
-
+                    - path: "./user_source/mutli/yaml/"
+                    - path: "./user_source/mutli/databag"
+                      databag: true
   roles        :
                  - "ansible-usermanage"
