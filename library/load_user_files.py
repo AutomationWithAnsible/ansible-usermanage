@@ -61,9 +61,11 @@ class LoadVarDir(object):
                 elif chef_action == "remove":
                     new_data["state"] = "absent"
             chef_groups = new_data.get("groups", False)
-            if chef_groups:
-                new_data["groups"] = ",".join(chef_groups)
-
+            primary_group = new_data.get("group", False)
+            if primary_group in chef_groups:
+                # Databag issue for smart-os Issue
+                chef_groups = [group_item for group_item in chef_groups if group_item != primary_group]
+            new_data["groups"] = ",".join(chef_groups)
             return {user_name: new_data}
 
     def _check_variable(self):
