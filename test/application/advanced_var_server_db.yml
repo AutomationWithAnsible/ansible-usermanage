@@ -26,3 +26,6 @@ usermanage_servers:
                key_options : 'no-port-forwarding'
              - user        : 'raki'  # should be not there
                state       : 'present'
+      - user        : tool
+        groups      : 'ops,lp'
+        state       : 'present'

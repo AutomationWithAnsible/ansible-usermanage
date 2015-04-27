@@ -47,7 +47,9 @@ class UsersDB(object):
                     new_user_key.update({"state": "absent"})
                 new_user_keys.append(new_user_key)
         else:
-            self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
+            # TODO: Should work without keys
+            # self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
+            pass
         return new_user_keys
 
     def _merge_key(self, user_keys, sever_keys, user_name, user_status=False):
@@ -69,7 +71,9 @@ class UsersDB(object):
                 elif "key" in server_key:
                     merged_keys += self._concat_keys(user_name, server_keys=server_key, user_status=user_status)
                 else:
-                    self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
+                    # TODO: Should work without keys
+                    # self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
+                    pass
             return merged_keys
         else:
             return self._concat_keys(user_name, user_keys=user_keys, user_status=user_status)
@@ -100,7 +104,8 @@ class UsersDB(object):
         user_server.pop("keys", None)  # Get rid of keys
         user_server.pop("team", None)  # Get rid of team if exists
         self.expanded_server_db.append(user_server)
-        self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
+        if len(user_server_keys) > 0:
+            self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
     def expand_servers(self):
         # Advanced mode Merges users and servers data
@@ -122,9 +127,9 @@ class UsersDB(object):
                                           "for '{}'".format(user_server))
 
     def expand_keys(self, keys, user):
-        if len(keys) == 0:
-            # TODO: Should work without keys maybe ?!?!?
-            self.module.fail_json(msg="user '{}' has no keys defined.".format(user))
+        # if len(keys) == 0:
+        #     # TODO: Should work without keys
+        #     self.module.fail_json(msg="user '{}' has no keys defined.".format(user))
 
         user_keys = []
         # If key is not a list than its a raw key string
@@ -136,7 +141,9 @@ class UsersDB(object):
                 if isinstance(key, basestring) and "ssh-" in key:
                     user_keys.append({"key": key})
                 elif "key" not in key and "name" not in key:
-                    self.module.fail_json(msg="user '{}' list has no keys defined.".format(key.keys()))
+                    # TODO: Should work without keys
+                    # self.module.fail_json(msg="user '{}' list has no keys defined.".format(key.keys()))
+                    pass
                 else:
                     # All is okay just add the dict
                     user_keys.append(key)
@@ -157,7 +164,8 @@ class UsersDB(object):
             # 4- Populate DBs
             self.expanded_users_db.append(user)  # Populate new list user db
             self.expanded_users_key_db.append({"user": username, "keys": keys})
-            self.lookup_key_db.update({username: keys})  # Populate dict key db
+            if len(keys) > 0:
+                self.lookup_key_db.update({username: keys})  # Populate dict key db
 
     def main(self):
         self.expand_users()
@@ -181,7 +189,7 @@ def main():
         argument_spec=dict(
             usersdb=dict(default=None, required=False, type="dict"),
             source_userdb=dict(default=None, required=False, type="dict"),
-            teamsdb=dict(default=None, required=False), # Should be dict but would break if value is false/none
+            teamsdb=dict(default=None, required=False),  # Should be dict but would break if value is false/none
             serversdb=dict(default=None, required=False),
         ),
         supports_check_mode=False

@@ -32,3 +32,5 @@ usermanage_usersdb:
     keys:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCvy3wrbh9hwSP0WrwXSFW4AujinW+xiDQn7RLJ8UcVZ+Yf4EmV6GTvjjJjIegIKjnH2xiRDjZ1qaSZzxW7/uyVxPrjhGAE8iPQAGcLEEcpg4IwlFpd3+7NgCKLdVHozH6z+h3G95otKQZLmKq9lzkfVyhDzTjU2qsnSQPitDrPY/tngN1gnZHQm2CUh4gamtOfxtPKlOqQ/t0iXJU48QfyN33XWr8M5/2FWP9jDyvxEjpCRW2Qu2+8uQONPOHMtkLW70G2+KVN90fkOXMnDotm+aY1OluUcXgrBakEctHNIWoKSUbcdOw1JkLY3Ojl11lIdXn267A1t70FaEXG8cIf"
     uid: 2400
+  brad:
+    comment: "Brad"
