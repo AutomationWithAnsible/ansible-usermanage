@@ -3,10 +3,6 @@ ansible-usermanage
 
 [![Build Status](https://travis-ci.org/ahelal/ansible-usermanage.svg?branch=master)](https://travis-ci.org/ahelal/ansible-usermanage)
 
-## NOTE 
-*Major rewrite is going on so please hold on :) or use stable release* 
-
-
 ## What
 
 This playbook was developed to manage users, groups, teams and SSH keys in multi node environment.
@@ -76,3 +72,8 @@ usermanage_create_per_user_group            : true
 ### Advanced mode
 ToDo document
 
+### teams
+ToDo document
+
+### Private Key
+ToDo document
