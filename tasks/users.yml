@@ -22,9 +22,9 @@
 - name: users | Manage private key for users
   copy:
      content="{{ item.privkey }}"
-     dest="{{ usermanage_default_home_dir_prefix + "/" + item.user }}/.ssh/id_rsa"
+     dest="{{ item.home | default(usermanage_default_home_dir_prefix + "/" + item.user ) }}/{{ usermanage_priv_key_suffix}}"
      mode=0600
      owner="{{ item.user }}"
   with_items: usermanage_users_privkey
   when: usermanage_users_privkey is defined
-  no_log: True
+#  no_log: True
