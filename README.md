@@ -38,7 +38,7 @@ usermanage_usersdb:
 
 Basically **usermanage_usersdb** is a dictionary of users each user will accept all options defined in [user ansible module](http://docs.ansible.com/user_module.html)
 
-A special arugment **keys** which is a list of keys that will be created for that user, each key can accept all options defined in [authorized key module](http://docs.ansible.com/authorized_key_module.html)
+A special argument **keys** which is a list of keys that will be created for that user, each key can accept all options defined in [authorized key module](http://docs.ansible.com/authorized_key_module.html)
 
 ### Group Management
 To manage groups you can define **usermanage_groupsdb** as a **list**. You must define atleast the *name* of group and optional state,gid and system.
