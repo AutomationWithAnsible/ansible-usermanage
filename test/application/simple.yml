@@ -3,7 +3,7 @@
   hosts        : all
   gather_facts : no
   sudo         : True
-  connection   : local
+  connection   : "{{ kitchen_connection | default('local') }}"
   vars         :
                  usermanage_debug : true
   vars_files   :

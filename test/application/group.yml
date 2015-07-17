@@ -3,8 +3,7 @@
   hosts        : all
   gather_facts : no
   sudo         : True
-  connection   : local
-
+  connection   : "{{ kitchen_connection | default('local') }}"
   vars_files   :
                  - "group_var_group_db.yml"
   roles        :

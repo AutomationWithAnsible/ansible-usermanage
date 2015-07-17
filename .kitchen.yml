@@ -3,15 +3,50 @@ driver:
   name: vagrant
 
 provisioner:
-  name: shell
-  script: test/run_vagrant_kitchen.sh
+    name               : ansible_push
+    verbose            : "vvvv"
+    ansible_config     : "test/ansible.cfg"
+    idempotency_test   : True
+    #chef_bootstrap_url : False
+    #extra_vars        : "@kitchen_vars.yml"
 
 platforms:
     - name: ubuntu-14.04
       driver:
         box: ubuntu/trusty64
-        synced_folders:
-         - [ "<%= Dir.pwd %>", "<%= '/mnt/shared/' + File.basename(Dir.pwd) %>/"]
 
 suites:
-  - name: default
+  - name            : group
+    provisioner     :
+        playbook    : "test/application/group.yml"
+        extra_vars  : { 'kitchen_connection': 'smart' }
+
+  - name            : simple
+    provisioner     :
+        playbook    : "test/application/simple.yml"
+        extra_vars  : { 'kitchen_connection': 'smart' }
+
+  - name            : advanced
+    provisioner     :
+        playbook    : "test/application/advanced.yml"
+        extra_vars  : { 'kitchen_connection': 'smart' }
+
+  - name            : source_files
+    provisioner     :
+        playbook    : "test/application/source_files.yml"
+        extra_vars  : { 'kitchen_connection': 'smart' }
+
+  - name            : source_databag
+    provisioner     :
+        playbook    : "test/application/source_databag.yml"
+        extra_vars  : { 'kitchen_connection': 'smart' }
+
+  - name            : multi_source_files
+    provisioner     :
+        playbook    : "test/application/multi_source_files.yml"
+        extra_vars  : { 'kitchen_connection': 'smart' }
+
+  - name            : team
+    provisioner     :
+        playbook    : "test/application/team.yml"
+        extra_vars  : { 'kitchen_connection': 'smart' }

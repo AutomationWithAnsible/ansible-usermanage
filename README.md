@@ -6,13 +6,13 @@ ansible-usermanage
 ## What
 
 This playbook was developed to manage users, groups, teams and SSH keys in multi node environment.
-It supports two modes *simple mode and advanced mode*
+It supports two modes *simple and advanced mode*
 
 
 ## How
 ### Simple Mode
 
-You define your user in a variable *usermanage_usersdb* in the scope of your server
+You define your user in a variable *usermanage_usersdb*. You can define that differnetly per host our group.
 
 ```yaml
 usermanage_usersdb: 

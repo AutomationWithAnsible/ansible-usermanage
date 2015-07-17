@@ -27,5 +27,4 @@ usermanage_source_facts                     : "user_files"
 default_temp_solution                       :
                                                - user: "x"
 
-
 usermanage_priv_key_suffix                  : ".ssh/id_rsa"
