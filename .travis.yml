@@ -102,7 +102,7 @@ script:
     # 4th:
     - ansible-playbook -i local.ini application/multi_source_specs.yml --sudo -vvvv -C --diff
 
-    ## Team managment
+    ## Team management
     # 1st: check syntax
     - ansible-playbook -i local.ini application/team.yml --syntax-check
     # 2nd:  Make sure we run the entire playbook

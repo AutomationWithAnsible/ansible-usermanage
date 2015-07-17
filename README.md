@@ -36,9 +36,9 @@ usermanage_usersdb:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2Pq3M7AgeBjmNII6HGsKd2uaXFIfaljpNg1Rf6y3iGP84wC82bMfZTSIhnzJ4qwHj7Bzn8oiMmqtyeGcmEwLXm5f7mk3lj9NmxUEfbuWsPoSX4VHIney0F2cjrYRAHua8vZ50OrqYvRaBNttx+pCsub/Kw/t91PQvz7s5ML12DfhlfbE5f/g+ZrKHBxsn6Vw0VqN1Cx5cecaN+9NbdwTV25/RVsXC6v9TQlIqWR+znt4ZVxUSCTAbGc51tmauoleZee2XBkAO7xmJ7zPQEndhErq/zm0euZGx1xGIjQ7dVBK8t1ah2UdBS4pSHgjhDulo0hr4gIubQ0FSV+8cWCNN"
 ```
 
-Basically **usermanage_usersdb** is a dictionary of users each user will accept all options defined in [user anisble module](http://docs.ansible.com/user_module.html)
+Basically **usermanage_usersdb** is a dictionary of users each user will accept all options defined in [user ansible module](http://docs.ansible.com/user_module.html)
 
-A special arugment **keys** which is a list of keys that will be created for that user, each key can accept all options defined in [authorized key module](http://docs.ansible.com/authorized_key_module.html)
+A special argument **keys** which is a list of keys that will be created for that user, each key can accept all options defined in [authorized key module](http://docs.ansible.com/authorized_key_module.html)
 
 ### Group Management
 To manage groups you can define **usermanage_groupsdb** as a **list**. You must define atleast the *name* of group and optional state,gid and system.
