@@ -31,7 +31,7 @@ suites:
         playbook    : "test/application/advanced.yml"
         extra_vars  : { 'kitchen_connection': 'smart' }
 
-  - name            : source_files
+  - name            : source-files
     provisioner     :
         playbook    : "test/application/source_files.yml"
         extra_vars  : { 'kitchen_connection': 'smart' }
@@ -41,7 +41,7 @@ suites:
         playbook    : "test/application/source_databag.yml"
         extra_vars  : { 'kitchen_connection': 'smart' }
 
-  - name            : multi_source_files
+  - name            : multi-source-files
     provisioner     :
         playbook    : "test/application/multi_source_files.yml"
         extra_vars  : { 'kitchen_connection': 'smart' }
