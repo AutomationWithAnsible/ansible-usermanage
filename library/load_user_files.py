@@ -1,5 +1,39 @@
 #!/usr/bin/python
 
+def parse_yaml(data, path_hint=None):
+    ''' convert a yaml string to a data structure.  Also supports JSON, ssssssh!!!'''
+
+    stripped_data = data.lstrip()
+    loaded = None
+    if stripped_data.startswith("{") or stripped_data.startswith("["):
+        # since the line starts with { or [ we can infer this is a JSON document.
+        try:
+            loaded = json.loads(data)
+        except ValueError, ve:
+            if path_hint:
+                raise errors.AnsibleError
+                self.module.fail_json(path_hint + ": " + str(ve))
+            else:
+                self.module.fail_json(str(ve))
+    else:
+        # else this is pretty sure to be a YAML document
+        loaded = yaml.load(data, Loader=Loader)
+    return loaded
+
+def parse_yaml_from_file(path, vault_password=None):
+    ''' convert a yaml file to a data structure '''
+    data = None
+    try:
+        data = open(path).read()
+    except IOError:
+        self.module.fail_json(msg=("file could not read: %s" % path))
+
+    try:
+        return parse_yaml(data, path_hint=path)
+    except yaml.YAMLError, exc:
+        self.module.fail_json(msg=("Syntax error in yaml file '%s'" % path))
+
+
 
 class LoadVarDir(object):
     def __init__(self, module):
@@ -103,18 +137,23 @@ def main():
         supports_check_mode=False
     )
     if not ansible_client_found:
-        module.fail_json(msg="Ansible is not installed or ansible python library is not in path")
+        module.fail_json(msg="Ansible is not installed or ansible python library is not in path. Can't import 'ansible.utils '")
     LoadVarDir(module).main()
 
 
 # import module snippets
 from ansible.module_utils.basic import *
 
+
 try:
-    from ansible.utils import parse_yaml_from_file
+    import yaml
 except ImportError:
     ansible_client_found = False
 else:
     ansible_client_found = True
+    try:
+        from yaml import CSafeLoader as Loader
+    except ImportError:
+        from yaml import SafeLoader as Loader
 
 main()
