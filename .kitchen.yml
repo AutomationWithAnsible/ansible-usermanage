@@ -1,19 +1,20 @@
 ---
-driver:
-  name: vagrant
+driver                 :
+    name               : localhost
 
 provisioner:
     name               : ansible_push
     verbose            : "vvvv"
     ansible_config     : "test/ansible.cfg"
     idempotency_test   : True
-    #chef_bootstrap_url : False
-    #extra_vars        : "@kitchen_vars.yml"
+
 
 platforms:
-    - name: ubuntu-14.04
-      driver:
-        box: ubuntu/trusty64
+    - name                      : travis
+      provisioner               :
+        raw_arguments           : "-c local --ask-sudo-pass"
+        extra_vars              : 
+          xxxxx               : "hxx"
 
 suites:
   - name            : group
@@ -36,7 +37,7 @@ suites:
         playbook    : "test/application/source_files.yml"
         extra_vars  : { 'kitchen_connection': 'smart' }
 
-  - name            : source_databag
+  - name            : source-databag
     provisioner     :
         playbook    : "test/application/source_databag.yml"
         extra_vars  : { 'kitchen_connection': 'smart' }

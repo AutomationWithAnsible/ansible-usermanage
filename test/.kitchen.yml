@@ -1,0 +1,22 @@
+---
+
+# this file is used to simulate travis 
+driver:
+  name: vagrant
+
+provisioner:
+  name: shell
+  script: run_vagrant_kitchen.sh
+
+platforms:
+    - name: ubuntu-14.04
+      driver:
+        box: ubuntu/trusty64
+        synced_folders:
+         - [ '/Users/helal/Documents/Projects/ansible-usermanage/' , '/mnt/shared/ansible-usermanage/' ]
+
+suites:
+  - name: default
+
+
+#     - ["<% File.expand_path('../',File.expand_path('../', Dir.pwd))%>", "<%= '/mnt/shared/' +  File.basename(File.expand_path('../', Dir.pwd)) %>/"]

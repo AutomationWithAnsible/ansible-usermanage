@@ -5,124 +5,18 @@ python: "2.7"
 before_install:
   # Make sure everything's up to date.
   - sudo apt-get update -qq
-  - sudo apt-get install -qq python-apt python-pycurl git python-pip
+  - sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev bundler build-essential autoconf ruby-dep-selector
 
 install:
   - sudo pip install ansible
-  - sudo mkdir -p /spec
-  - >
-    [ ! -d /spec/ansible-spec ]
-    && sudo git clone https://github.com/ahelal/ansible-spec /spec/ansible-spec && echo "ansible-spec Installing"
-    || echo "ansible-spec allready installed"
+
 
 script:
     - cd test
     - ansible --version
-    ## Group
-    # 1st: check syntax
-    - ansible-playbook -i local.ini application/group.yml --syntax-check
-    # 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/group.yml --sudo -vvvv
-    # 3rd:  Make sure our playbook is idempotent
-    - >
-      ansible-playbook -i local.ini application/group.yml --sudo -vvvv | tee ansible_output
-      | grep -q 'changed=0.*failed=0'
-      && (echo 'Idempotence test: pass' && exit 0)
-      || (echo 'Idempotence test: fail' && exit 1)
-    # 4th: run test make sure module spit it right data
-    - ansible-playbook -i local.ini application/group_spec.yml --sudo -vvvv -C
+    - bundle install
+    - bundle exec kitchen test travis
 
-    ## Simple
-    # 1st: check syntax
-    - ansible-playbook -i local.ini application/simple.yml --syntax-check
-    # 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/simple.yml --sudo -vvvv
-    # 3rd:  Make sure our playbook is idempotent
-    - >
-      ansible-playbook -i local.ini application/simple.yml --sudo -vvvv | tee ansible_output
-      | grep -q 'changed=0.*failed=0'
-      && (echo 'Idempotence test: pass' && exit 0)
-      || (echo 'Idempotence test: fail' && exit 1)
-    # 4th: run test make sure module spit it right data
-    - ansible-playbook -i local.ini application/simple_spec.yml --sudo -vvvv -C
-
-    ## Advanced
-    # 1st: check syntax
-    - ansible-playbook -i local.ini application/advanced.yml --syntax-check
-    # 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/advanced.yml --sudo -vvvv
-    # 3rd:  Make sure our playbook is idempotent
-    - >
-      ansible-playbook -i local.ini application/advanced.yml --sudo -vvvv | tee ansible_output
-      | grep -q 'changed=0.*failed=0'
-      && (echo 'Idempotence test: pass' && exit 0)
-      || (echo 'Idempotence test: fail' && exit 1)
-    # 4th: run test make sure module spit it right data
-    - ansible-playbook -i local.ini application/advanced_spec.yml --sudo -vvvv -C --diff
-
-    ## Source file yaml and json
-    # 1st: check syntax
-    - ansible-playbook -i local.ini application/source_files.yml --syntax-check
-    # 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/source_files.yml --sudo -vvvv
-    # 3rd:  Make sure our playbook is idempotent
-    - >
-      ansible-playbook -i local.ini application/source_files.yml --sudo -vvvv | tee ansible_output
-      | grep -q 'changed=0.*failed=0'
-      && (echo 'Idempotence test: pass' && exit 0)
-      || (echo 'Idempotence test: fail' && exit 1)
-    # 4th: run test make sure module spit it right data
-    - ansible-playbook -i local.ini application/source_files_specs.yml --sudo -vvvv -C --diff
-
-    ## Source databag
-    # 1st: check syntax
-    - ansible-playbook -i local.ini application/source_databag.yml --syntax-check
-    # 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/source_databag.yml --sudo -vvvv
-    # 3rd:  Make sure our playbook is idempotent
-    - >
-      ansible-playbook -i local.ini application/source_databag.yml --sudo -vvvv | tee ansible_output
-      | grep -q 'changed=0.*failed=0'
-      && (echo 'Idempotence test: pass' && exit 0)
-      || (echo 'Idempotence test: fail' && exit 1)
-    # 4th: run test make sure module spit it right data
-    - ansible-playbook -i local.ini application/source_databag_spec.yml --sudo -vvvv -C --diff
-
-    ## Mutli Source
-    # 1st: check syntax
-    - ansible-playbook -i local.ini application/multi_source_files.yml --syntax-check
-    # 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/multi_source_files.yml --sudo -vvvv
-    # 3rd:  Make sure our playbook is idempotent
-    - >
-      ansible-playbook -i local.ini application/multi_source_files.yml --sudo -vvvv | tee ansible_output
-      | grep -q 'changed=0.*failed=0'
-      && (echo 'Idempotence test: pass' && exit 0)
-      || (echo 'Idempotence test: fail' && exit 1)
-    # 4th:
-    - ansible-playbook -i local.ini application/multi_source_specs.yml --sudo -vvvv -C --diff
-
-    ## Team management
-    # 1st: check syntax
-    - ansible-playbook -i local.ini application/team.yml --syntax-check
-    # 2nd:  Make sure we run the entire playbook
-    - ansible-playbook -i local.ini application/team.yml --sudo -vvvv
-    # 3rd:  Make sure our playbook is idempotent
-    - >
-      ansible-playbook -i local.ini application/team.yml --sudo -vvvv | tee ansible_output
-      | grep -q 'changed=0.*failed=0'
-      && (echo 'Idempotence test: pass' && exit 0)
-      || (echo 'Idempotence test: fail' && exit 1)
-    # 4th:
-    - ansible-playbook -i local.ini application/team_spec.yml --sudo -vvvv -C --diff
-
-after_failure:
-    - echo "Failure"
-    - sudo cat ansible_output
-    - sudo netstat -atnlp
-    - sudo cat /home/nexus/sonatype-work/nexus/logs/nexus.log
-    - sudo cat /home/nexus/sonatype-work/nexus/logs/request.log
-    - ansible -i 127.0.0.1, -m setup all -c local
 
 after_success:
     - echo "Success"
