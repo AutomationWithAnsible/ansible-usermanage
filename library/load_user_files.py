@@ -1,39 +1,5 @@
 #!/usr/bin/python
 
-def parse_yaml(data, path_hint=None):
-    ''' convert a yaml string to a data structure.  Also supports JSON, ssssssh!!!'''
-
-    stripped_data = data.lstrip()
-    loaded = None
-    if stripped_data.startswith("{") or stripped_data.startswith("["):
-        # since the line starts with { or [ we can infer this is a JSON document.
-        try:
-            loaded = json.loads(data)
-        except ValueError, ve:
-            if path_hint:
-                raise errors.AnsibleError
-                self.module.fail_json(path_hint + ": " + str(ve))
-            else:
-                self.module.fail_json(str(ve))
-    else:
-        # else this is pretty sure to be a YAML document
-        loaded = yaml.load(data, Loader=Loader)
-    return loaded
-
-def parse_yaml_from_file(path, vault_password=None):
-    ''' convert a yaml file to a data structure '''
-    data = None
-    try:
-        data = open(path).read()
-    except IOError:
-        self.module.fail_json(msg=("file could not read: %s" % path))
-
-    try:
-        return parse_yaml(data, path_hint=path)
-    except yaml.YAMLError, exc:
-        self.module.fail_json(msg=("Syntax error in yaml file '%s'" % path))
-
-
 
 class LoadVarDir(object):
     def __init__(self, module):
@@ -58,13 +24,45 @@ class LoadVarDir(object):
                         }
         self.file_data = {}
 
+    def parse_yaml(self, data, path_hint=None):
+        ''' convert a yaml string to a data structure.  Also supports JSON, ssssssh!!!'''
+
+        stripped_data = data.lstrip()
+        loaded = None
+        if stripped_data.startswith("{") or stripped_data.startswith("["):
+            # since the line starts with { or [ we can infer this is a JSON document.
+            try:
+                loaded = json.loads(data)
+            except ValueError, ve:
+                if path_hint:
+                    self.module.fail_json(msg=path_hint + ": " + str(ve))
+                else:
+                    self.module.fail_json(msg=str(ve))
+        else:
+            # else this is pretty sure to be a YAML document
+            loaded = yaml.load(data, Loader=Loader)
+        return loaded
+
+    def parse_yaml_from_file(self, path, vault_password=None):
+        ''' convert a yaml file to a data structure '''
+        data = None
+        try:
+            data = open(path).read()
+        except IOError:
+            self.module.fail_json(msg="file could not read: %s" % path)
+
+        try:
+            return self.parse_yaml(data, path_hint=path)
+        except yaml.YAMLError, exc:
+            self.module.fail_json(msg="Syntax error in yaml file '%s'" % path)
+
     def main(self):
         self._check_variable()
         result = {"changed": False, "msg": "Hi", self.fact: self.file_data}
         self.module.exit_json(**result)
 
     def _read_from_file(self, file_path, databag):
-        data = parse_yaml_from_file(file_path, vault_password="")
+        data = self.parse_yaml_from_file(file_path, vault_password="")
         if data and type(data) != dict:
             self.module.fail_json(msg="%s must be stored as a dictionary/hash".format(file_path))
         elif data is None:
