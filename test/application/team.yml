@@ -6,7 +6,9 @@
   connection   : "{{ kitchen_connection | default('local') }}"
   vars:
                 usermanage_debug : true
+                usermanage_debug_level: 3
   vars_files   :
                  - "team_var_db.yml"
+                 - "group_var_group_db.yml"                 
   roles        :
                  - "ansible-usermanage"

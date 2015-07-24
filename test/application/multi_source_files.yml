@@ -4,6 +4,8 @@
   gather_facts : no
   sudo         : True
   connection   : "{{ kitchen_connection | default('local') }}"
+  vars_files   :
+                 - "group_var_group_db.yml"
   vars         :
                  usermanage_user_source_files:
                     - path: "./user_source/mutli/yaml/"

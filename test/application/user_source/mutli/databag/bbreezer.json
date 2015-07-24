@@ -7,13 +7,10 @@
   "groups": [
     "group2",
     "group1",
-    "ops"
+    "group3"
   ],
   "shell": "\/bin\/bash",
-  "system": true,
-  "vpn_password": "asdasdasdad",
-  "openid": "bbreezer.myopenid.com",
-  "comment": "Bacardi Breezer"
+  "system": true
 }
 
 
