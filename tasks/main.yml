@@ -13,3 +13,6 @@
 
 - include: users.yml
 
+- check_users: users_var="{{cuser}}"
+  when: usermanage_check_users
+
