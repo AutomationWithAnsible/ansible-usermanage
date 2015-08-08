@@ -5,14 +5,13 @@ python: "2.7"
 before_install:
   # Make sure everything's up to date.
   - sudo apt-get update -qq
-  - sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev bundler build-essential autoconf ruby-dep-selector
+  - sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev bundler build-essential autoconf
 
 install:
   - sudo pip install ansible
 
 
 script:
-    - cd test
     - ansible --version
     - bundle install
     - bundle exec kitchen test travis
