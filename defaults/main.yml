@@ -28,3 +28,5 @@ default_temp_solution                       :
                                                - user: "x"
 
 usermanage_priv_key_suffix                  : ".ssh/id_rsa"
+
+usermanage_check_users                      : false

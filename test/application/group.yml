@@ -1,6 +1,6 @@
 ---
 - name         : Group (1)
-  hosts        : all
+  hosts        : localhost
   gather_facts : no
   sudo         : True
   connection   : "{{ kitchen_connection | default('local') }}"

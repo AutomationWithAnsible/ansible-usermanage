@@ -7,14 +7,13 @@ provisioner:
     verbose            : "vvvv"
     ansible_config     : "test/ansible.cfg"
     idempotency_test   : True
+    sudo               : True
 
 
 platforms:
     - name                      : travis
       provisioner               :
-        raw_arguments           : "-c local --ask-sudo-pass"
-        extra_vars              : 
-          xxxxx               : "hxx"
+        raw_arguments           : "-c local"
 
 suites:
   - name            : group
