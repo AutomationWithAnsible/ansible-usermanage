@@ -1,11 +1,16 @@
 #!/usr/bin/python
 
+USERVALUES = [ 'append', 'comment', 'createhome', 'expires', 'force', 'generate_ssh_key', 'group', 'groups', 'home',
+               'login_class', 'move_home', 'name', 'non_unique', 'password', 'remove', 'shell', 'skeleton', 'ssh_key_bits',
+               'ssh_key_comment', 'ssh_key_file', 'ssh_key_passphrase', 'ssh_key_type', 'state', 'system', 'uid', 'update_password',
+               'keys']
 
 class UsersDB(object):
     def __init__(self, module):
         self.module = module
         self.users_db = self.module.params["usersdb"]
         self.source_user_db = self.module.params["source_userdb"]
+        self.extract_extra_keys = self.module.params["extract_extra_keys"]
         # If we have to userdb and source db lets merge them if not
         if self.users_db and self.source_user_db:
             self.users_db.update(self.source_user_db)
@@ -22,6 +27,7 @@ class UsersDB(object):
         self.expanded_users_key_db = []  # Used in simple mode
         self.expanded_server_db = []  # Used in advanced mode for merged User + server
         self.expanded_server_key_db = []  # Used in advanced mode
+        self.extra_users_data = [] # Used for extra data that is not related to user module 
 
     def _concat_keys(self, user_name, user_keys=None, server_keys=None, user_status=False):
         # Concat keys (if possible) and update username to keys
@@ -153,15 +159,33 @@ class UsersDB(object):
         # Get User database which is a dic and create expendaded_user_db and key_db
         # Put keys in right dictionary format
         for username, user_options in self.users_db.iteritems():
+            
             # 1- Convert dic to list (servers_db style)
             user = {"name": username}  # create the account name
             user.update(user_options)  # update all other option
-            # 2- Compile key
+            # 2-  Check for extra keys that dont translate to ansible user module
+            if self.extract_extra_keys:
+                extra_user_data = None
+                for dic_key in user_options.keys():
+                    if dic_key not in USERVALUES:
+                        # Add user and state
+                        if not extra_user_data:
+                             extra_user_data = user
+                             extra_user_data.update({ "state": user_options.get("state", "present")})
+
+                        extra_user_data.update({ dic_key: user_options[dic_key] })    
+                        user.pop(dic_key, None) # Remove item from user DB
+                # Add extras to a list if any
+                if extra_user_data:
+                    self.extra_users_data.append(dict(extra_user_data))
+
+            
+            # 3- Compile key
             unformatted_keys = user_options.get("keys", [])
             keys = self.expand_keys(unformatted_keys, user)
-            # 3- remove keys from userdb if exists
+            # 4- remove keys from userdb if exists
             user.pop("keys", None)
-            # 4- Populate DBs
+            # 5- Populate DBs
             self.expanded_users_db.append(user)  # Populate new list user db
             self.expanded_users_key_db.append({"user": username, "keys": keys})
             if len(keys) > 0:
@@ -181,6 +205,11 @@ class UsersDB(object):
             result = {"changed": False, "msg": "",
                       "users_db": self.expanded_users_db,
                       "key_db": self.expanded_users_key_db}
+
+        # Add extras if options
+        if self.extract_extra_keys:
+            result.update({ "extra" : self.extra_users_data })
+
         self.module.exit_json(**result)
 
 
@@ -191,6 +220,7 @@ def main():
             source_userdb=dict(default=None, required=False, type="dict"),
             teamsdb=dict(default=None, required=False),  # Should be dict but would break if value is false/none
             serversdb=dict(default=None, required=False),
+            extract_extra_keys=dict(default=True, required=False),
         ),
         supports_check_mode=False
     )
