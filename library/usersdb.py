@@ -159,27 +159,25 @@ class UsersDB(object):
         # Get User database which is a dic and create expendaded_user_db and key_db
         # Put keys in right dictionary format
         for username, user_options in self.users_db.iteritems():
-            
-            # 1- Convert dic to list (servers_db style)
             user = {"name": username}  # create the account name
-            user.update(user_options)  # update all other option
-            # 2-  Check for extra keys that dont translate to ansible user module
+            
+            # 1-  Check for extra keys that dont translate to ansible user module
             if self.extract_extra_keys:
                 extra_user_data = None
                 for dic_key in user_options.keys():
                     if dic_key not in USERVALUES:
                         # Add user and state
                         if not extra_user_data:
-                             extra_user_data = user
+                             extra_user_data = dict(user)
                              extra_user_data.update({ "state": user_options.get("state", "present")})
 
                         extra_user_data.update({ dic_key: user_options[dic_key] })    
-                        user.pop(dic_key, None) # Remove item from user DB
+                        user_options.pop(dic_key, None) # Remove item from user DB
                 # Add extras to a list if any
                 if extra_user_data:
                     self.extra_users_data.append(dict(extra_user_data))
-
-            
+            # 2- Convert dic to list (servers_db style)
+            user.update(user_options)  # update all other option
             # 3- Compile key
             unformatted_keys = user_options.get("keys", [])
             keys = self.expand_keys(unformatted_keys, user)
