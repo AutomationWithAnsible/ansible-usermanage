@@ -1,0 +1,20 @@
+---
+- name         : Extra user info Simple Mode (1)
+  hosts        : all
+  gather_facts : no
+  sudo         : True
+  connection   : "{{ kitchen_connection | default('local') }}"
+  vars         :
+                 usermanage_debug : true
+  vars_files   :
+                 - "extra_var_simple_db.yml"
+  pre_tasks    :
+     - debug: var=kitchen_connection
+  roles        :
+                 - "ansible-usermanage"
+  post_tasks   :
+
+     - name: Print the extra user options in a YAML
+       copy:
+         content="{{ cuser.extra | to_nice_yaml }}"
+         dest="/tmp/extra_simple.yml"
