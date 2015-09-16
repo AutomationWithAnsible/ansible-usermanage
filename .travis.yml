@@ -14,6 +14,7 @@ install:
 
 script:
     - ansible --version
+    - export TRAVIS=True
     - bundle install
     - bundle exec kitchen test travis
 
