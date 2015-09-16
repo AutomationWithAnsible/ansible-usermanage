@@ -16,5 +16,5 @@
 
      - name: Print the extra user options in a YAML
        copy:
-         content="{{ cuser.extra | to_nice_yaml }}"
+         content="{{ cuser.extra | to_nice_json }}"
          dest="/tmp/extra_simple.yml"

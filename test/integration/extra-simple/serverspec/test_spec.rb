@@ -1,4 +1,6 @@
 require 'serverspec'
+require 'json'
+
 
 # Required by serverspec
 set :backend, :exec
@@ -37,4 +39,13 @@ describe user('raki') do
   it { should_not exist }
 end
 
+describe "Extra vairables" do
+ 
+  it "match output" do
+    file = File.read('//tmp/extra_simple.yml')
+    extra_options = [{"aws"=>true, "aws_group"=>"Admin", "name"=>"raki", "state"=>"absent"}, {"name"=>"vodaka", "state"=>"present", "vpn"=>true}]
+    data_hash = JSON.parse(file)
+    expect(data_hash).to match(extra_options)
 
+  end
+end
