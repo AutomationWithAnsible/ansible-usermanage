@@ -1,6 +1,6 @@
 ---
 - name         : Extra user info Simple Mode (1)
-  hosts        : all
+  hosts        : "{{ kitchen_hosts }}"
   gather_facts : no
   sudo         : True
   connection   : "{{ kitchen_connection | default('local') }}"
