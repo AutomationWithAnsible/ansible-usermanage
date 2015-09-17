@@ -14,7 +14,13 @@
                  - "ansible-usermanage"
   post_tasks   :
 
-     - name: Print the extra user options in a YAML
+     - name: Print the user db in a yaml file
        copy:
-         content="{{ cuser.extra | to_nice_json }}"
-         dest="/tmp/extra_simple.yml"
+         content="{{ cuser.users_db | to_yaml }}"
+         dest="/tmp/extra_simple_users_db.yaml"
+
+     - name: Print the extra user options in a yaml file
+       copy:
+         content="{{ cuser.extra | to_yaml }}"
+         dest="/tmp/extra_simple_extra_db.yaml"
+
