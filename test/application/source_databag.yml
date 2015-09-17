@@ -1,6 +1,6 @@
 ---
 - name         : Sources databag
-  hosts        : localhost
+  hosts        : "{{ kitchen_hosts }}"
   gather_facts : no
   sudo         : True
   connection   : "{{ kitchen_connection | default('local') }}"
