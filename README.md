@@ -1,7 +1,7 @@
 ansible-usermanage
 ===
 
-[![Build Status](https://travis-ci.org/AutomationWithAnsible/ansible-usermanage.svg?branch=master)](https://travis-ci.org/ahelal/ansible-usermanage)
+[![Build Status](https://travis-ci.org/AutomationWithAnsible/ansible-usermanage.svg?branch=master)](https://travis-ci.org/AutomationWithAnsible/ansible-usermanage)
 
 ## What
 
