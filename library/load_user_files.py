@@ -33,7 +33,7 @@ class LoadVarDir(object):
             # since the line starts with { or [ we can infer this is a JSON document.
             try:
                 loaded = json.loads(data)
-            except ValueError, ve:
+            except ValueError as ve:
                 if path_hint:
                     self.module.fail_json(msg=path_hint + ": " + str(ve))
                 else:
@@ -53,7 +53,7 @@ class LoadVarDir(object):
 
         try:
             return self.parse_yaml(data, path_hint=path)
-        except yaml.YAMLError, exc:
+        except yaml.YAMLError as exc:
             self.module.fail_json(msg="Syntax error in yaml file '%s'" % path)
 
     def main(self):
@@ -73,7 +73,7 @@ class LoadVarDir(object):
         return data
 
     def convert_chef_user_data_bag(self, data):
-        print "data=", data
+        print(("data=", data))
         if len(data) == 0:
             return data
         else:
