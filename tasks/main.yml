@@ -1,6 +1,7 @@
 ---
 
 - include: sources.yml
+  tags: sources
 
 - include: debug.yml
   when: usermanage_debug
