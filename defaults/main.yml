@@ -30,3 +30,6 @@ default_temp_solution                       :
 usermanage_priv_key_suffix                  : ".ssh/id_rsa"
 
 usermanage_check_users                      : false
+
+# Only compile source files without doing any change
+usermanage_compile_sources_only             :  false
