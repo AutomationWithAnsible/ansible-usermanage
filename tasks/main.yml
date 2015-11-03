@@ -1,19 +1,21 @@
 ---
 
 - include: sources.yml
+  when: usermanage_compile_sources_only or not usermanage_compile_sources_only
   tags: sources
 
 - include: debug.yml
-  when: usermanage_debug
+  when: usermanage_debug and not usermanage_compile_sources_only
 
 - include: per_user_group.yml
-  when: usermanage_create_per_user_group and cuser.users_db is defined
+  when: usermanage_create_per_user_group and cuser.users_db is defined and not usermanage_compile_sources_only
 
 - include: groups.yml
-  when: usermanage_groupsdb is defined and usermanage_groupsdb is not none
+  when: usermanage_groupsdb is defined and usermanage_groupsdb is not none and not usermanage_compile_sources_only
 
 - include: users.yml
+  when: not usermanage_compile_sources_only
 
 - check_users: users_var="{{cuser}}"
-  when: usermanage_check_users
+  when: usermanage_check_users and not usermanage_compile_sources_only
 
