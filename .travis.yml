@@ -10,11 +10,11 @@ before_install:
 
 install:
   - sudo pip install ansible
-  - rvm use system
   - sudo apt-get install vagrant
   - sudo apt-get install virtualbox
   - sudo apt-get install virtualbox-dkms
   - sudo apt-get install virtualbox-ose-dkms
+  - which vagrant
   - sudo gem install bundle
 
 script:
