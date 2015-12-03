@@ -1,0 +1,27 @@
+---
+- name         : Extra user info advanced Mode (1)
+  hosts        : "{{ kitchen_hosts }}"
+  gather_facts : no
+  sudo         : True
+  connection   : "{{ kitchen_connection | default('local') }}"
+  vars         :
+                 usermanage_debug : true
+  vars_files   :
+                 - "extra_advanced_var_user_db.yml"
+                 - "extra_advanced_var_server_db.yml"
+  pre_tasks    :
+     - debug: var=kitchen_connection
+  roles        :
+                 - "ansible-usermanage"
+  post_tasks   :
+
+     - name: Print the user db in a yaml file
+       copy:
+         content="{{ cuser.users_db | to_nice_yaml }}"
+         dest="/tmp/extra_advanced_users_db.yaml"
+
+     - name: Print the extra user options in a yaml file
+       copy:
+         content="{{ cuser.extra | to_nice_json }}"
+         dest="/tmp/extra_advanced_extra_db.yaml"
+

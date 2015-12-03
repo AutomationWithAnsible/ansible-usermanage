@@ -64,5 +64,10 @@ suites:
 
   - name            : extra-simple
     provisioner     :
-        playbook    : "test/application/exta_simple.yml"
+        playbook    : "test/application/extra_simple.yml"
+        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+
+  - name            : extra-advanced
+    provisioner     :
+        playbook    : "test/application/extra_advanced.yml"
         extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }

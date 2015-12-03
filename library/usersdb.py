@@ -28,6 +28,7 @@ class UsersDB(object):
         self.expanded_server_db = []  # Used in advanced mode for merged User + server
         self.expanded_server_key_db = []  # Used in advanced mode
         self.extra_users_data = [] # Used for extra data that is not related to user module 
+        self.extra_server_data = [] # Used for extra data that is not related to user module for server mode
 
     def _concat_keys(self, user_name, user_keys=None, server_keys=None, user_status=False):
         # Concat keys (if possible) and update username to keys
@@ -122,11 +123,20 @@ class UsersDB(object):
 
             if user_name:
                 self._merge_user(user_name, user_server)
+                ## Add self.extra_server_data
+                if self.extract_extra_keys:
+                    extra_user_item = filter(lambda exta_user: exta_user['name'] == user_name,  self.extra_users_data )
+                    # not empty than add
+                    if extra_user_item != []:
+                        # We make a good assumption that we only get one item :( which is somehow true but probably need to check it
+                        self.extra_server_data.append(dict(extra_user_item[0]))
+                
             elif team_name:
                 team_definition = self.teams_db.get(team_name, False)
                 if not team_definition:
                     self.module.fail_json(msg="'%s' team has no definition" % team_name)
                 for user_in_team in team_definition:
+                    ## Add self.extra_server_data
                     self._merge_user(user_in_team, user_server)
             else:
                 self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. "
@@ -198,15 +208,17 @@ class UsersDB(object):
             result = {"changed": False, "msg": "",
                       "users_db": self.expanded_server_db,
                       "key_db": self.expanded_server_key_db}
+            # Add extras if options for servers
+            if self.extract_extra_keys:
+                result.update({ "extra" : self.extra_server_data })
         else:
             # Simple mode no servers db
             result = {"changed": False, "msg": "",
                       "users_db": self.expanded_users_db,
                       "key_db": self.expanded_users_key_db}
-
-        # Add extras if options
-        if self.extract_extra_keys:
-            result.update({ "extra" : self.extra_users_data })
+            # Add extras if options
+            if self.extract_extra_keys:
+                result.update({ "extra" : self.extra_users_data })
 
         self.module.exit_json(**result)
 
