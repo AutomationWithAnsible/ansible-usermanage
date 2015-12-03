@@ -10,11 +10,14 @@ before_install:
 
 install:
   - sudo pip install ansible
-
+  - sudo apt-get install vagrant
+  - sudo apt-get install virtualbox
+  - sudo apt-get install virtualbox-dkms
 
 script:
     - ansible --version
-    - export TRAVIS=True
+    - vagrant --version
+    - vboxmanage --version
     - bundle install
     - bundle exec kitchen test travis
 
