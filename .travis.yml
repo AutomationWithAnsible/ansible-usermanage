@@ -10,20 +10,12 @@ before_install:
 
 install:
   - sudo pip install ansible
-  - sudo apt-get install virtualbox
-  - sudo apt-get install virtualbox-dkms
-  - sudo apt-get install virtualbox-ose-dkms
-  - wget https://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4_x86_64.deb -O /tmp/vagrant_1.7.4_x86_64.deb
-  - sudo dpkg -i /tmp/vagrant*.deb
-  - which vagrant
 
 script:
     - ansible --version
-    - vagrant --version
-    - vboxmanage --version
+    - export TRAVIS=True
     - bundle install
     - bundle exec kitchen test travis
-
 
 after_success:
     - echo "Success"
