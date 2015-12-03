@@ -114,6 +114,14 @@ class UsersDB(object):
         if len(user_server_keys) > 0:
             self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
+    def expand_servers_extra(self, user_name):
+        ## Add self.extra_server_data
+        extra_user_item = filter(lambda exta_user: exta_user['name'] == user_name,  self.extra_users_data )
+        # not empty than add
+        if extra_user_item != []:
+            # We make a good assumption that we only get one item :( which is somehow true but probably need to check it
+            self.extra_server_data.append(dict(extra_user_item[0]))
+
     def expand_servers(self):
         # Advanced mode Merges users and servers data
         # Expand server will overwrite same attributes defined in user db except for state = "absent"
@@ -125,11 +133,7 @@ class UsersDB(object):
                 self._merge_user(user_name, user_server)
                 ## Add self.extra_server_data
                 if self.extract_extra_keys:
-                    extra_user_item = filter(lambda exta_user: exta_user['name'] == user_name,  self.extra_users_data )
-                    # not empty than add
-                    if extra_user_item != []:
-                        # We make a good assumption that we only get one item :( which is somehow true but probably need to check it
-                        self.extra_server_data.append(dict(extra_user_item[0]))
+                    self.expand_servers_extra(user_name)
                 
             elif team_name:
                 team_definition = self.teams_db.get(team_name, False)
@@ -137,6 +141,8 @@ class UsersDB(object):
                     self.module.fail_json(msg="'%s' team has no definition" % team_name)
                 for user_in_team in team_definition:
                     ## Add self.extra_server_data
+                    if self.extract_extra_keys:
+                        self.expand_servers_extra(user_in_team)
                     self._merge_user(user_in_team, user_server)
             else:
                 self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. "
