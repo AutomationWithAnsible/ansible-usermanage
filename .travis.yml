@@ -15,6 +15,7 @@ install:
   - sudo apt-get install virtualbox
   - sudo apt-get install virtualbox-dkms
   - sudo apt-get install virtualbox-ose-dkms
+  - gem install bundle
 
 script:
     - ansible --version
