@@ -1,0 +1,21 @@
+usermanage_teamsdb:
+      team1:
+              - daniels
+              - pepsi
+      team2:
+              - gin
+              - ops
+              - dev
+      team3:
+              - raki
+
+usermanage_servers:
+      - team        : "team1"
+
+      - team        : "team2"
+
+      - team        : "team3"
+        state       : 'absent'
+
+      - user        : "label"
+        state       : 'absent'

@@ -1,0 +1,31 @@
+---
+
+usermanage_servers:
+      #Simplest form (create testuser and push the testuser key defined in the userdb)
+      - user        : "label"
+        groups      : "sudo"
+        uid         : 4000
+
+      - user        : "ops"
+        groups      : "adm"
+        state       : "present"
+        keys        :
+             - user        : 'daniels'
+               state       : 'present'
+               key_options : 'no-port-forwarding'
+             - user        : 'stewart'
+               state       : 'present'
+
+      - user        : "dev"
+        groups      : 'ops,lp'
+        state       : 'present'
+        shell       : '/bin/false'
+        keys        :
+             - user        : 'vodka'
+               state       : 'present'
+               key_options : 'no-port-forwarding'
+             - user        : 'raki'  # should be not there
+               state       : 'present'
+      - user        : tool
+        groups      : 'ops,lp'
+        state       : 'present'

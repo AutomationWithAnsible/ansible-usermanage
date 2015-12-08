@@ -11,13 +11,11 @@ before_install:
 install:
   - sudo pip install ansible
 
-
 script:
     - ansible --version
     - export TRAVIS=True
     - bundle install
     - bundle exec kitchen test travis
-
 
 after_success:
     - echo "Success"
