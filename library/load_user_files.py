@@ -6,6 +6,7 @@ class LoadVarDir(object):
         self.path = self.module.params["path"]
         self.fact = self.module.params["fact"]
         self.data_bag = self.module.params["databag"]
+        self.extract_extra_keys = self.module.params["extract_extra_keys"]
         # Chef => Ansible mapping
         self.mapping = {"comment": "comment",
                         "force": "force",
@@ -84,6 +85,10 @@ class LoadVarDir(object):
                 if data_bag_item_value:
                     ansible_key = self.mapping.get(mapping_key)
                     new_data.update({ansible_key: data_bag_item_value})
+
+            if self.extract_extra_keys:
+                for key, value in data:
+                    new_data.update({key: value})
             # Check for an action
             chef_action = new_data.get("state", False)
             if chef_action:
@@ -129,7 +134,8 @@ def main():
         argument_spec=dict(
             name=dict(default=None, aliases=["path"], required=True, type='list'),
             fact=dict(default="var_dir", required=False),
-            databag=dict(default=False, type='bool')
+            databag=dict(default=False, type='bool'),
+            extract_extra_keys=dict(default=True, required=False)
         ),
         supports_check_mode=False
     )
