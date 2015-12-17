@@ -1,4 +1,4 @@
-                        ---
+---
 - name         : Advanced Mode (1)
   hosts        : "{{ kitchen_hosts }}"
   gather_facts : no
