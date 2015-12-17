@@ -73,7 +73,6 @@ class LoadVarDir(object):
         return data
 
     def convert_chef_user_data_bag(self, data):
-        print(("data=", data))
         if len(data) == 0:
             return data
         else:
@@ -106,28 +105,36 @@ class LoadVarDir(object):
 
     def _check_variable(self):
         for path_item in self.path:
-
             try:
                 path = path_item.get("path")
                 path = os.path.expanduser(path)
+                base_path = path_item.get("base_path", None)
                 databag = path_item.get("databag", self.data_bag)
                 #print "all={} type={} path={} databag={}".format(path_item, type(path_item), path, databag)
             except Exception as E:
                 self.module.fail_json(msg="Path is a list but is malformed could not get 'path' got '{}'. Error '{}'".
                                       format(path_item, E))
-            self._follow_path(path, databag)
+            self._follow_path(path, databag, base_path)
 
-    def _follow_path(self, path, databag):
-        if os.path.exists(path):
-            if os.path.isdir(path):
-                for root, dirs, files in os.walk(path, topdown=False):
-                    for filename in files:
-                        self.file_data.update(self._read_from_file(path + "/" + filename, databag))
-            else:
-                self.file_data.update(self._read_from_file(path, databag))
+    def _load_files(self,actual_path, databag):
+        if os.path.isdir(actual_path):
+            for root, dirs, files in os.walk(actual_path, topdown=False):
+                for filename in files:
+                    self.file_data.update(self._read_from_file(actual_path + "/" + filename, databag))
         else:
-            self.module.fail_json(msg="Failed to find path '{}'.".format(path))
+            self.file_data.update(self._read_from_file(path, databag))
 
+    def _follow_path(self, path, databag, base_path=None):
+        cwd = os.getcwd()
+        if base_path:
+            base_path = os.path.abspath(base_path+ "/" + path)
+
+        if os.path.exists(path):
+            self._load_files(path,databag)
+        elif base_path and os.path.exists(base_path):
+            self._load_files(base_path,databag)
+        else:
+            self.module.fail_json(msg="Failed to find path '{}'.".format(path), cwd=cwd, base_path=base_path)
 
 def main():
     module = AnsibleModule(
