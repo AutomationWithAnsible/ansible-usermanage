@@ -2,7 +2,7 @@
 - name         : Sources databag
   hosts        : "{{ kitchen_hosts }}"
   gather_facts : no
-  sudo         : True
+  become       : True
   connection   : "{{ kitchen_connection | default('local') }}"
   vars_files   :
                  - "group_var_group_db.yml"
@@ -10,6 +10,7 @@
                  usermanage_user_source_files   :
                                                   - path: "./user_source/databag/"
                                                     databag: true
+                                                    base_path: "{{ lookup('pipe', 'pwd') }}"
 
                  usermanage_debug               : true
                  usermanage_usersdb:
