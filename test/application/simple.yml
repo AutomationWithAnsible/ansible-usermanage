@@ -2,7 +2,7 @@
 - name         : Simple Mode (1)
   hosts        : "{{ kitchen_hosts }}"
   gather_facts : no
-  sudo         : True
+  become       : True
   connection   : "{{ kitchen_connection | default('local') }}"
   vars         :
                  usermanage_debug : true
