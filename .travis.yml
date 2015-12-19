@@ -5,15 +5,14 @@ language: python
 python: "2.7"
 
 before_install:
-  # Make sure everything's up to date.
   - sudo apt-get update -qq
-  #- sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev build-essential autoconf
   - sudo apt-get install -qq ruby ruby-dev build-essential 
   - cd /tmp 
   - git clone https://github.com/AutomationWithAnsible/ansible-setup.git
 
 install:
   - /tmp/ansible-setup/example/travis-test.sh
+  - cd $TRAVIS_BUILD_DIR/
   - gem install bundler
   - bundle install
 
