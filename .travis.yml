@@ -1,18 +1,21 @@
 ---
+dist: trusty
+sudo: required
 language: python
 python: "2.7"
 
 before_install:
   # Make sure everything's up to date.
   - sudo apt-get update -qq
-  - sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev build-essential autoconf
+  #- sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev build-essential autoconf
   - gem install bundler
+  - cd /tmp 
+  - git clone https://github.com/AutomationWithAnsible/ansible-setup.git
 
 install:
-  - sudo pip install ansible
+  - /tmp/ansible-setup/example/travis-test.sh
 
 script:
-    - ansible --version
     - export TRAVIS=True
     - bundle install
     - bundle exec kitchen test travis
