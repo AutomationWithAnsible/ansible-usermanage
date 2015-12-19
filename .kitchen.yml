@@ -14,10 +14,10 @@ provisioner:
     sudo               : <%= if ENV['TRAVIS'] then 'True' else 'False' end  %>
 
 platforms:
-    # travistravis 
-     - name                      : <%= if ENV['TRAVIS'] then 'travis' else 'ubuntu-14.04' end %>
+     - name                      : <%= if ENV['TRAVIS'] then 'travis-v1' else 'ubuntu-14.04-v1' end %>
        provisioner               :
          raw_arguments           : <%= if ENV['TRAVIS'] then '-c local' else '' end %>
+         ansible_playbook_bin    : "ansible-version set v1 > /dev/null && ansible-playbook"
        # Should be safily ignored by Travis since connection local
        driver:
          box: ubuntu/trusty64
@@ -25,6 +25,16 @@ platforms:
         cpus   : 2
         memory : 2048 
 
+     - name                      : <%= if ENV['TRAVIS'] then 'travis-v2' else 'ubuntu-14.04-v2' end %>
+       provisioner               :
+         raw_arguments           : <%= if ENV['TRAVIS'] then '-c local' else '' end %>
+         ansible_playbook_bin    : "ansible-version set v2 > /dev/null && ansible-playbook"
+       # Should be safily ignored by Travis since connection local
+       driver:
+         box: ubuntu/trusty64
+       customize:
+        cpus   : 2
+        memory : 2048 
 
 suites:
   - name            : group
