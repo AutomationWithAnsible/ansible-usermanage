@@ -18,7 +18,7 @@ install:
 
 script:
     - export TRAVIS=True
-    - bundle exec kitchen test travis
+    - bundle exec kitchen test travis -l debug
 
 after_success:
     - echo "Success"
