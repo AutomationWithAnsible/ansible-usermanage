@@ -1,78 +1,66 @@
 ---
-driver                 :
-    # TRAVIS: local 
-    # NO TRAVIS: vagrant
-    name               : <%= if ENV['TRAVIS'] then 'localhost' else 'vagrant' end  %>
+driver                    :
+    name                  : <%= if ENV['TRAVIS'] then 'localhost' else 'vagrant' end  %>
+    box                   : "ubuntu/trusty64"
+    customize             :
+         cpus             : 2
+         memory           : 2048 
 
 provisioner:
-    name               : ansible_push
-    verbose            : "vvvv"
-    ansible_config     : "test/ansible.cfg"
-    idempotency_test   : True
-    # TRAVIS: True
-    # NO TRAVIS: False
-    sudo               : <%= if ENV['TRAVIS'] then 'True' else 'False' end  %>
+    name                  : ansible_push
+    verbose               : "vvvv"
+    ansible_config        : "test/ansible.cfg"
+    idempotency_test      : True
+    sudo                  : <%= if ENV['TRAVIS'] then 'True' else 'False' end  %>
+    raw_arguments         : <%= if ENV['TRAVIS'] then '-c local' else '' end %>
+    extra_vars            : { 'kitchen_connection': '<%= if ENV["TRAVIS"] then "local" else "smart" end %>', 'kitchen_hosts': '<%= if ENV["TRAVIS"] then "localhost" else "all" end %>' }
 
 platforms:
-    # travistravis 
-     - name                      : <%= if ENV['TRAVIS'] then 'travis' else 'ubuntu-14.04' end %>
-       provisioner               :
-         raw_arguments           : <%= if ENV['TRAVIS'] then '-c local' else '' end %>
-       # Should be safily ignored by Travis since connection local
-       driver:
-         box: ubuntu/trusty64
-       customize:
-        cpus   : 2
-        memory : 2048 
+ - name                   : "ubuntu-v1"
+   provisioner            :
+     ansible_playbook_bin : "ansible-version set v1 > /dev/null && ansible-playbook"
 
+ - name                   : "ubuntu-v2"
+   provisioner            :
+     ansible_playbook_bin : "ansible-version set v2 > /dev/null && ansible-playbook"
 
 suites:
-  - name            : group
-    provisioner     :
-        playbook    : "test/application/group.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : group
+    provisioner           :
+        playbook          : "test/application/group.yml"
 
-  - name            : simple
-    provisioner     :
-        playbook    : "test/application/simple.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : simple
+    provisioner           :
+        playbook          : "test/application/simple.yml"
 
-  - name            : advanced
-    provisioner     :
-        playbook    : "test/application/advanced.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : advanced
+    provisioner           :
+        playbook          : "test/application/advanced.yml"
 
-  - name            : source-files
-    provisioner     :
-        playbook    : "test/application/source_files.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : source-files
+    provisioner           :
+        playbook          : "test/application/source_files.yml"
 
-  - name            : source-databag
-    provisioner     :
-        playbook    : "test/application/source_databag.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : source-databag
+    provisioner           :
+        playbook          : "test/application/source_databag.yml"
 
-  - name            : multi-source-files
-    provisioner     :
-        playbook    : "test/application/multi_source_files.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : multi-source-files
+    provisioner           :
+        playbook          : "test/application/multi_source_files.yml"
 
-  - name            : team
-    provisioner     :
-        playbook    : "test/application/team.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : team
+    provisioner           :
+        playbook          : "test/application/team.yml"
 
-  - name            : extra-simple
-    provisioner     :
-        playbook    : "test/application/extra_simple.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : extra-simple
+    provisioner           :
+        playbook          : "test/application/extra_simple.yml"
 
-  - name            : extra-advanced
-    provisioner     :
-        playbook    : "test/application/extra_advanced.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : extra-advanced
+    provisioner           :
+        playbook          : "test/application/extra_advanced.yml"
 
-  - name            : extra-team
-    provisioner     :
-        playbook    : "test/application/extra_team.yml"
-        extra_vars  : { 'kitchen_connection': 'smart', 'kitchen_hosts': '<%= if ENV['TRAVIS'] then 'localhost' else 'all' end %>' }
+  - name                  : extra-team
+    provisioner           :
+        playbook          : "test/application/extra_team.yml"       

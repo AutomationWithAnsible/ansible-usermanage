@@ -32,7 +32,7 @@
     owner=root
   when: usermanage_debug_level >= 1
 
-- name: debug | Debug Users /tmp/debugUser.{{inventory_hostname}}-{{item.account}}
+- name: debug | Debug Users /tmp/debugUser.inventory_hostname-item.account
   template:
      src=debug_users.j2
      dest="{{ usermanage_debug_dir }}/{{ inventory_hostname }}-{{ item.user | default(item.name) }}"
