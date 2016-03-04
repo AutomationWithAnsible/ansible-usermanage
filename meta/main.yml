@@ -2,10 +2,10 @@
 galaxy_info:
   author: Adham Helal
   description: "Manage your Linux user and ssh key account. Accross your infrastructure"
-  min_ansible_version: 1.4
+  min_ansible_version: 1.9
   platforms:
   - name: Ubuntu
     versions:
     - precise
   categories:
-  - system
+    - system
