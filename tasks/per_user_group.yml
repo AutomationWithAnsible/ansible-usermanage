@@ -3,5 +3,5 @@
 - name: groups | Create per user group
   group:
     name="{{ item.name  | default(item.user) }}"
-    state="{{ item.state | default("present") }}"
+    state="{{ item.state | default('present') }}"
   with_items: cuser.users_db

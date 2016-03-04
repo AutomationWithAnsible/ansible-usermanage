@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 USERVALUES = [ 'append', 'comment', 'createhome', 'expires', 'force', 'generate_ssh_key', 'group', 'groups', 'home',
-               'login_class', 'move_home', 'name', 'non_unique', 'password', 'remove', 'shell', 'skeleton', 'ssh_key_bits',
+               'login_class', 'move_home', 'name', 'non_unique', 'password', 'remove', 'seuser', 'shell', 'skeleton', 'ssh_key_bits',
                'ssh_key_comment', 'ssh_key_file', 'ssh_key_passphrase', 'ssh_key_type', 'state', 'system', 'uid', 'update_password',
                'keys']
 

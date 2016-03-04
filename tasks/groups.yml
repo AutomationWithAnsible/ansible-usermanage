@@ -1,7 +1,10 @@
 ---
 
-- name: groups | Create groups
+- name: groups | Ensure users are in groups state
   group:
-  args: "{{ item }}"
+    gid="{{ item.gid | default(omit) }}"
+    name="{{ item.name }}"
+    state="{{ item.state | default(omit) }}"
+    system="{{ item.system | default(omit) }}"
   with_items: usermanage_groupsdb | default(default_temp_solution)
   when: usermanage_groupsdb

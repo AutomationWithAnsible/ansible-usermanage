@@ -1,19 +1,73 @@
 ---
-- name: users | Create users
+
+#     user_item_name="{{ 'name' if item.name is defined else 'user' }}"
+
+- name: users | Compile list of selected users (if interactive passed)
+  set_fact:
+    usermanage_selected_users_temp_list="{{ usermanage_selected_users_temp_list + cuser.users_db | selectattr('name', 'equalto', item) | list }}"
+  with_items: usermanage_selected_users.split(',')
+  when: cuser.users_db is defined and usermanage_selected_users is defined
+
+- name: users | Set with items for users (if interactive passed)
+  set_fact:
+    usermanage_user_with_items="{{ usermanage_selected_users_temp_list }}"
+  when: cuser.users_db is defined and usermanage_selected_users is defined
+
+- name: users | Compile list of selected users key (if interactive passed)
+  set_fact:
+    usermanage_selected_key_temp_list="{{ usermanage_selected_key_temp_list + cuser.key_db | selectattr('user', 'equalto', item) | list }}"
+  with_items: usermanage_selected_users.split(',')
+  when: cuser.key_db is defined and usermanage_selected_users is defined 
+
+- name: users | Set with items for users key (if interactive passed)
+  set_fact:
+    usermanage_keys_with_items="{{ usermanage_selected_key_temp_list }}"
+  when: cuser.key_db is defined and usermanage_selected_users is defined
+
+- name: users | Ensure users are in required state
   user:
-    force=yes
-    append=True
-  args: "{{ item }}"
-  with_items: cuser.users_db | default([])
+    append="{{ item.append | default('yes') }}"
+    comment="{{ item.comment | default(omit) }}"
+    createhome="{{ item.createhome | default(omit) }}"
+    expires="{{ item.expires | default(omit) }}"
+    force="{{ item.force | default('yes') }}"
+    generate_ssh_key="{{ item.generate_ssh_key | default(omit) }}"
+    group="{{ item.group | default(omit) }}"
+    groups="{{ item.groups | default(omit) }}"
+    home="{{ item.home | default(omit) }}"
+    login_class="{{ item.login_class | default(omit) }}"
+    move_home="{{ item.move_home | default(omit) }}"
+    name="{{ item.name | default(item.user) | default(omit) }}"
+    non_unique="{{ item.non_unique | default(omit) }}"
+    password="{{ item.password | default(omit) }}"
+    remove="{{ item.remove | default(omit) }}"
+    seuser="{{ item.seuser | default(omit) }}"
+    shell="{{ item.shell | default(omit) }}"
+    skeleton="{{ item.skeleton | default(omit) }}"
+    ssh_key_bits="{{ item.ssh_key_bits | default(omit) }}"
+    ssh_key_comment="{{ item.ssh_key_comment | default(omit) }}"
+    ssh_key_file="{{ item.ssh_key_file | default(omit) }}"
+    ssh_key_passphrase="{{ item.ssh_key_passphrase | default(omit) }}"
+    ssh_key_type="{{ item.ssh_key_type | default(omit) }}"
+    state="{{ item.state | default(omit) }}"
+    system="{{ item.system | default(omit) }}"
+    uid="{{ item.uid | default(omit) }}"
+    update_password="{{ item.update_password | default(omit) }}"
+  with_items: usermanage_user_with_items
   when: cuser.users_db is defined
 
 - name: users | Manage public key for users
   authorized_key:
-     user="{{ item.0.user | default(item.0.name) }}"
-     manage_dir="yes"
-  args: "{{ item.1 }}"
+    exclusive="{{ item.1.exclusive | default(omit) }}"
+    key="{{ item.1.key }}" 
+    key_options="{{ item.1.key_options | default(omit) }}"
+    manage_dir="{{ item.1.manage_dir | default('yes') }}"
+    path="{{ item.1.path | default(omit) }}"
+    state="{{ item.1.state | default(omit) }}"
+    user="{{ item.0.user | default(item.0.name) }}"
+    validate_certs="{{ item.1.validate_certs | default(omit) }}"
   with_subelements:
-      - cuser.key_db | default([])
+      - usermanage_keys_with_items
       - keys
   register: keyrc
   failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
@@ -27,5 +81,4 @@
      owner="{{ item.user }}"
   with_items: usermanage_users_privkey
   when: usermanage_users_privkey is defined
-#  no_log: True
-
+  no_log: True
