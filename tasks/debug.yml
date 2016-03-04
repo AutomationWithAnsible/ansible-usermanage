@@ -3,25 +3,21 @@
 - name: debug | Display compiled user
   debug:
     var=cuser.users_db
-  sudo: no
   when: usermanage_debug_level >= 2
 
 - name: debug | Display compiled keys
   debug:
     var=cuser.key_db
-  sudo: no
   when: usermanage_debug_level >= 2
 
 - name: debug | Display Extra
   debug:
     var=cuser.extra
-  sudo: no
   when: usermanage_debug_level >= 2
 
 - name: debug | Display lookup_key_db keys
   debug:
     var=cuser.lookup_key_db
-  sudo: no
   when: usermanage_debug_level >= 3 and cuser.lookup_key_db is defined
 
 - name: debug | Debug directory create
@@ -42,5 +38,4 @@
 - name: debug | Debug usermanage_groupsdb
   debug:
     var=usermanage_groupsdb
-  sudo: no
   when: usermanage_debug_level >= 3 and usermanage_groupsdb is defined
