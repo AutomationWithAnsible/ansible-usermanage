@@ -24,6 +24,15 @@ platforms:
    provisioner            :
      ansible_playbook_bin : "ansible-version set v2 > /dev/null && ansible-playbook"
 
+ - name                   : "docker-v2"
+   provisioner            :
+     ansible_playbook_bin : "$(ansible-version path v2)ansible-playbook"
+   driver                 :
+     name                 : docker
+   driver_config          :
+    image                 : "adham/kitchen:0.0.2"
+    platform            : ubuntu    
+
 suites:
   - name                  : group
     provisioner           :
@@ -32,6 +41,10 @@ suites:
   - name                  : simple
     provisioner           :
         playbook          : "test/application/simple.yml"
+
+  - name                  : selected_users
+    provisioner           :
+        playbook          : "test/integration/selected_users/run.yml"
 
   - name                  : advanced
     provisioner           :
