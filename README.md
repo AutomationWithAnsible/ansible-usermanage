@@ -5,8 +5,7 @@ ansible-usermanage
 
 ## What
 
-This playbook was developed to manage users, groups, teams and SSH keys in multi node environment.
-It supports two modes *simple and advanced mode*
+This role was developed to manage users, groups, teams, extra user information and SSH keys in multi node environment.
 
 
 ## How
@@ -74,6 +73,11 @@ ToDo document
 
 ### teams
 ToDo document
+
+## Extra information
+
+## Check mode
+
 
 ### Private Key
 ToDo document
