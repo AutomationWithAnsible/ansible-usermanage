@@ -5,6 +5,7 @@ language: python
 python: "2.7"
 
 before_install:
+  - rvm list rubies
   - sudo apt-get update -qq
   - sudo apt-get install -qq ruby ruby-dev build-essential 
   - cd /tmp 
