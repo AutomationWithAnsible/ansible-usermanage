@@ -7,27 +7,27 @@ services:
   
 env:
     - KITCHEN_TEST=group-ubuntu-v1              
-#    - KITCHEN_TEST=group-ubuntu-v2              
-#    - KITCHEN_TEST=simple-ubuntu-v1             
-#    - KITCHEN_TEST=simple-ubuntu-v2             
-#    - KITCHEN_TEST=selected-users-ubuntu-v1     
-#    - KITCHEN_TEST=selected-users-ubuntu-v2     
-#    - KITCHEN_TEST=advanced-ubuntu-v1           
-#    - KITCHEN_TEST=advanced-ubuntu-v2           
-#    - KITCHEN_TEST=source-files-ubuntu-v1       
-#    - KITCHEN_TEST=source-files-ubuntu-v2       
-#    - KITCHEN_TEST=source-databag-ubuntu-v1     
-#    - KITCHEN_TEST=source-databag-ubuntu-v2     
-#    - KITCHEN_TEST=multi-source-files-ubuntu-v1 
-#    - KITCHEN_TEST=multi-source-files-ubuntu-v2 
-#    - KITCHEN_TEST=team-ubuntu-v1               
-#    - KITCHEN_TEST=team-ubuntu-v2               
-#    - KITCHEN_TEST=extra-simple-ubuntu-v1       
-#    - KITCHEN_TEST=extra-simple-ubuntu-v2       
-#    - KITCHEN_TEST=extra-advanced-ubuntu-v1     
-#    - KITCHEN_TEST=extra-advanced-ubuntu-v2     
-#    - KITCHEN_TEST=extra-team-ubuntu-v1         
-#    - KITCHEN_TEST=extra-team-ubuntu-v2
+    - KITCHEN_TEST=group-ubuntu-v2              
+    - KITCHEN_TEST=simple-ubuntu-v1             
+    - KITCHEN_TEST=simple-ubuntu-v2             
+    - KITCHEN_TEST=selected-users-ubuntu-v1     
+    - KITCHEN_TEST=selected-users-ubuntu-v2     
+    - KITCHEN_TEST=advanced-ubuntu-v1           
+    - KITCHEN_TEST=advanced-ubuntu-v2           
+    - KITCHEN_TEST=source-files-ubuntu-v1       
+    - KITCHEN_TEST=source-files-ubuntu-v2       
+    - KITCHEN_TEST=source-databag-ubuntu-v1     
+    - KITCHEN_TEST=source-databag-ubuntu-v2     
+    - KITCHEN_TEST=multi-source-files-ubuntu-v1 
+    - KITCHEN_TEST=multi-source-files-ubuntu-v2 
+    - KITCHEN_TEST=team-ubuntu-v1               
+    - KITCHEN_TEST=team-ubuntu-v2               
+    - KITCHEN_TEST=extra-simple-ubuntu-v1       
+    - KITCHEN_TEST=extra-simple-ubuntu-v2       
+    - KITCHEN_TEST=extra-advanced-ubuntu-v1     
+    - KITCHEN_TEST=extra-advanced-ubuntu-v2     
+    - KITCHEN_TEST=extra-team-ubuntu-v1         
+    - KITCHEN_TEST=extra-team-ubuntu-v2
 
 before_install:
   # Make sure everything's up to date.
