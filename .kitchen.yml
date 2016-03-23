@@ -16,13 +16,22 @@ provisioner:
     extra_vars            : { 'kitchen_connection': '<%= if ENV["TRAVIS"] then "local" else "smart" end %>', 'kitchen_hosts': '<%= if ENV["TRAVIS"] then "localhost" else "all" end %>' }
 
 platforms:
- - name                   : "ubuntu-v1"
+ - name                   : ubuntu-v1
    provisioner            :
-     ansible_playbook_bin : "ansible-version set v1 > /dev/null && ansible-playbook"
+     ansible_playbook_bin : "$(ansible-version path v1)ansible-playbook"
 
- - name                   : "ubuntu-v2"
+ - name                   : ubuntu-v2
    provisioner            :
-     ansible_playbook_bin : "ansible-version set v2 > /dev/null && ansible-playbook"
+     ansible_playbook_bin : "$(ansible-version path v2)ansible-playbook"
+
+ - name                   : docker-u14-v2
+   provisioner            :
+     ansible_playbook_bin : "$(ansible-version path v2)ansible-playbook"
+   driver_config          :
+     image                : quay.io/hellofresh/kitchen-base
+     platform             : ubuntu
+   driver                 :
+    name                  : docker
 
 suites:
   - name                  : group
@@ -32,6 +41,10 @@ suites:
   - name                  : simple
     provisioner           :
         playbook          : "test/application/simple.yml"
+
+  - name                  : selected_users
+    provisioner           :
+        playbook          : "test/integration/selected_users/run.yml"
 
   - name                  : advanced
     provisioner           :

@@ -2,6 +2,8 @@
 
 - name: groups | Create per user group
   group:
-    name="{{ item.name  | default(item.user) }}"
-    state="{{ item.state | default("present") }}"
+    gid="{{ item.gid | default(omit) }}"
+    name="{{ item.name }}"
+    state="{{ item.state | default(omit) }}"
+    system="{{ item.system | default(omit) }}"
   with_items: cuser.users_db

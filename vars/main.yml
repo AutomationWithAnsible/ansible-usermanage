@@ -1,0 +1,13 @@
+---
+
+# Default items in loop
+usermanage_user_with_items                 : "{{ cuser.users_db | default([]) }}"
+usermanage_keys_with_items                 : "{{ cuser.key_db | default([]) }}"
+
+# Empty list so we can concat items into it
+usermanage_selected_users_temp_list        : []
+usermanage_selected_key_temp_list          : []
+
+# Temp solution to with_items and when condition issue
+default_temp_solution                       :
+                                               - user: "x"

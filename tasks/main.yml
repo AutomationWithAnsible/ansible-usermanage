@@ -16,6 +16,5 @@
 - include: users.yml
   when: not usermanage_compile_sources_only
 
-- check_users: users_var="{{cuser}}"
+- check_users: users_var="{{ cuser }}"
   when: usermanage_check_users and not usermanage_compile_sources_only
-
