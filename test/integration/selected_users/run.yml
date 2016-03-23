@@ -8,6 +8,7 @@
                  - "selected_users_vars.yml"
   vars         :
                 usermanage_selected_users: "gin,daniels"
+                usermanage_debug: True
   roles        :
                  - "ansible-usermanage"
   post_tasks   :
