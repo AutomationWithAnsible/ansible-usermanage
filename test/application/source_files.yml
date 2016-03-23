@@ -1,6 +1,6 @@
 ---
 - name         : Sources files
-  hosts        : "{{ kitchen_hosts }}"
+  hosts        : "all"
   gather_facts : no
   become       : True
   connection   : "{{ kitchen_connection | default('local') }}"
