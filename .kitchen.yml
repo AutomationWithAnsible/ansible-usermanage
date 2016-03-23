@@ -18,20 +18,20 @@ provisioner:
 platforms:
  - name                   : "ubuntu-v1"
    provisioner            :
-     ansible_playbook_bin : "ansible-version set v1 > /dev/null && ansible-playbook"
+     ansible_playbook_bin : "$(ansible-version path v1)ansible-playbook"
 
  - name                   : "ubuntu-v2"
    provisioner            :
-     ansible_playbook_bin : "ansible-version set v2 > /dev/null && ansible-playbook"
+     ansible_playbook_bin : "$(ansible-version path v2)ansible-playbook"
 
- - name                   : "docker-v2"
+ - name                   : docker-u14-v2
    provisioner            :
      ansible_playbook_bin : "$(ansible-version path v2)ansible-playbook"
-   driver                 :
-     name                 : docker
    driver_config          :
-    image                 : "adham/kitchen:0.0.2"
-    platform            : ubuntu    
+     image                : quay.io/hellofresh/kitchen-base
+     platform             : ubuntu
+   driver                 :
+    name                  : docker
 
 suites:
   - name                  : group

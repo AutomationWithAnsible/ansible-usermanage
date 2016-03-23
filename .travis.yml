@@ -4,13 +4,12 @@ python: "2.7"
 
 services:
   - docker
-  
+
 env:
     - KITCHEN_TEST=group-ubuntu-v1              
     - KITCHEN_TEST=group-ubuntu-v2              
     - KITCHEN_TEST=simple-ubuntu-v1             
     - KITCHEN_TEST=simple-ubuntu-v2             
-    - KITCHEN_TEST=selected-users-ubuntu-v1     
     - KITCHEN_TEST=selected-users-ubuntu-v2     
     - KITCHEN_TEST=advanced-ubuntu-v1           
     - KITCHEN_TEST=advanced-ubuntu-v2           
