@@ -1,11 +1,5 @@
 ---
 
-- name: users | Compile list of selected users extras (if interactive passed)
-  set_fact:
-    usermanage_selected_users_extra="{{ usermanage_selected_users_temp_list + cuser.extra | selectattr('name'| default('user'), 'equalto', item) | list }}"
-  with_items: usermanage_selected_users.split(',')
-  when: cuser.users_db is defined and usermanage_selected_users is defined
-  
 - name: users | Compile list of selected users (if interactive passed)
   set_fact:
     usermanage_selected_users_temp_list="{{ usermanage_selected_users_temp_list + cuser.users_db | selectattr('name'| default('user'), 'equalto', item) | list }}"
