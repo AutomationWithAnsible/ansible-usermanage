@@ -106,6 +106,7 @@ class UsersDB(object):
         user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name, user_status)
         # In case of team user dict will not be defined so lets just define anyway
         user_server.update({"user": user_name})
+        user_server.update({"name": user_name})
 
         # Populate DBs
         user_server.pop("keys", None)  # Get rid of keys
