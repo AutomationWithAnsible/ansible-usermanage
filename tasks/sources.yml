@@ -17,6 +17,7 @@
     serversdb: "{{ usermanage_servers | default(omit) }}"
     teamsdb: "{{ usermanage_teamsdb | default(omit) }}"
     source_userdb: "{{ loaded_users_db[usermanage_source_facts] | default(omit) }}"
+    usermanage_selected_users: "{{ usermanage_selected_users | default(omit) }}"
   register: cuser
   connection: local
   become: no
