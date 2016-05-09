@@ -13,20 +13,15 @@
                  - "ansible-usermanage"
   post_tasks   :
 
-     - name: Print Selected users
-       copy:
-         content="{{ usermanage_selected_users_temp_list | to_nice_yaml }}"
-         dest="/tmp/reg_selected_users_vars.yaml"
-
-     - name: Print Selected users key
-       copy:
-         content="{{ usermanage_selected_key_temp_list | to_nice_yaml }}"
-         dest="/tmp/reg_selected_users_key_vars.yaml"
-
      - name: Print the user db in a yaml file
        copy:
          content="{{ cuser.users_db | to_nice_yaml }}"
-         dest="/tmp/selected_users_vars_db.yaml"
+         dest="/tmp/reg_selected_users_vars.yaml"
+
+     - name: Print the users key db in a yaml file
+       copy:
+         content="{{ cuser.key_db | to_nice_yaml }}"
+         dest="/tmp/reg_selected_users_key_vars.yaml"
 
      - name: Print the extra user options in a yaml file
        copy:
