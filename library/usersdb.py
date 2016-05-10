@@ -15,9 +15,10 @@ class UsersDB(object):
         self.users_db = self.module.params["usersdb"]
         self.source_user_db = self.module.params["source_userdb"]
         self.extract_extra_keys = self.module.params["extract_extra_keys"]
-        self.usermanage_selected_users = self.module.params[
-            "usermanage_selected_users"
-        ]
+        self.selected_users = self.module.params["usermanage_selected_users"]
+
+        if self.selected_users:
+            self.selected_users = self.selected_users.split(',')
 
         # If we have to userdb and source db lets merge them if not
         if self.users_db and self.source_user_db:
@@ -171,12 +172,11 @@ class UsersDB(object):
                 "name", False
             )
 
-            # Check if usermanage_selected_users is set, and exclude users
-            if self.usermanage_selected_users:
-                if user_name not in self.usermanage_selected_users:
-                    continue
-
             if user_name:
+                # Check if usermanage_selected_users is set, and exclude users
+                if self.selected_users:
+                    if user_name not in self.selected_users:
+                        continue
                 self._merge_user(user_name, user_server)
                 ## Add self.extra_server_data
                 if self.extract_extra_keys:
@@ -189,6 +189,10 @@ class UsersDB(object):
                         msg="'%s' team has no definition" % team_name
                     )
                 for user_in_team in team_definition:
+                    # Check if usermanage_selected_users is set, and exclude users
+                    if self.selected_users:
+                        if user_in_team not in self.selected_users:
+                            continue
                     ## Add self.extra_server_data
                     if self.extract_extra_keys:
                         self.expand_servers_extra(user_in_team)
@@ -234,8 +238,8 @@ class UsersDB(object):
         for username, user_options in self.users_db.iteritems():
 
             # Check if usermanage_selected_users is set, and exclude users
-            if self.usermanage_selected_users:
-                if username not in self.usermanage_selected_users:
+            if self.selected_users:
+                if username not in self.selected_users:
                     continue
 
             user = {"name": username}  # create the account name
