@@ -26,11 +26,7 @@ class UsersDB(object):
         if self.source_user_db and not self.users_db:
             self.users_db = self.source_user_db
         if not self.users_db and not self.source_user_db:
-            self.module.fail_json(
-                msg='''
-                Missing argument. You must defined either 'usersdb'
-                or 'source_userdb'.
-                ''')
+            self.module.fail_json(msg="Missing argument. You must defined either 'usersdb' or 'source_userdb'.")
 
         self.teams_db = self.module.params["teamsdb"]
         self.servers_db = self.module.params["serversdb"]
@@ -86,31 +82,21 @@ class UsersDB(object):
                     user = server_key.pop("user", False)
                     account_key = self.lookup_key_db.get(user)
                     user_definition = self.users_db.get(user, {})
-                    if user_definition.get("state", "present") in (
-                            "absent", "delete", "deleted", "remove", "removed"
-                    ):
+                    if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
                         user_status = "absent"
-                    merged_keys += self._concat_keys(
-                        user_keys=account_key, server_keys=server_key,
-                        user_status=user_status
-                    )
+                    merged_keys += self._concat_keys(user_keys=account_key, server_keys=server_key, user_status=user_status)
 
                 elif "team" in server_key:
                     self.module.fail_json(msg="Team key is not yet implemented")
                 elif "key" in server_key:
-                    merged_keys += self._concat_keys(
-                        server_keys=server_key,
-                        user_status=user_status
-                    )
+                    merged_keys += self._concat_keys(server_keys=server_key, user_status=user_status)
                 else:
                     # TODO: Should work without keys
                     # self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
                     pass
             return merged_keys
         else:
-            return self._concat_keys(
-                user_keys=user_keys, user_status=user_status
-            )
+            return self._concat_keys(user_keys=user_keys, user_status=user_status)
 
     def _merge_user(self, user_name, user_server):
         user_definition = self.users_db.get(user_name, False)
@@ -118,9 +104,7 @@ class UsersDB(object):
         if not user_definition:
             self.module.fail_json(msg="'%s' user has no definition" % user_name)
 
-        if user_definition.get("state", "present") in (
-                "absent", "delete", "deleted", "remove", "removed"
-        ):
+        if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
             user_status = "absent"
         else:
             user_status = False
@@ -132,9 +116,7 @@ class UsersDB(object):
             merged_user.update({"state": "absent"})
         user_server = merged_user
         user_db_key = self.lookup_key_db.get(user_name, None)
-        user_server_keys = self._merge_key(
-            user_db_key, user_server.get("keys", None), user_status
-        )
+        user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_status)
 
         # In case of team user dict will not be defined so lets just define anyway
         user_server.update({"user": user_name})
@@ -144,16 +126,11 @@ class UsersDB(object):
         user_server.pop("team", None)  # Get rid of team if exists
         self.expanded_server_db.append(user_server)
         if len(user_server_keys) > 0:
-            self.expanded_server_key_db.append(
-                {"user": user_name, "keys": user_server_keys}
-            )
+            self.expanded_server_key_db.append({"user": user_name, "keys": user_server_keys})
 
     def expand_servers_extra(self, user_name):
         ## Add self.extra_server_data
-        extra_user_item = filter(
-            lambda exta_user: exta_user['name'] == user_name,
-            self.extra_users_data
-        )
+        extra_user_item = filter(lambda exta_user: exta_user['name'] == user_name, self.extra_users_data)
         # not empty than add
         if extra_user_item != []:
             # We make a good assumption that we only get one item :( which is somehow true but probably need to check it
@@ -168,9 +145,7 @@ class UsersDB(object):
         for user_server in self.servers_db:
 
             team_name = user_server.get("team", False)
-            user_name = user_server.get("user", False) or user_server.get(
-                "name", False
-            )
+            user_name = user_server.get("user", False) or user_server.get("name", False)
 
             if user_name:
                 # Check if usermanage_selected_users is set, and exclude users
@@ -185,9 +160,7 @@ class UsersDB(object):
             elif team_name:
                 team_definition = self.teams_db.get(team_name, False)
                 if not team_definition:
-                    self.module.fail_json(
-                        msg="'%s' team has no definition" % team_name
-                    )
+                    self.module.fail_json(msg="'%s' team has no definition" % team_name)
                 for user_in_team in team_definition:
                     # Check if usermanage_selected_users is set, and exclude users
                     if self.selected_users:
@@ -198,12 +171,7 @@ class UsersDB(object):
                         self.expand_servers_extra(user_in_team)
                     self._merge_user(user_in_team, user_server)
             else:
-                self.module.fail_json(
-                    msg='''
-                    Your server definition has no user or team. Please
-                    check your data type. for '{}'
-                    '''.format(user_server)
-                )
+                self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. for '{}'".format(user_server))
 
     def expand_keys(self, keys):
         # if len(keys) == 0:
@@ -252,12 +220,10 @@ class UsersDB(object):
                         # Add user and state
                         if not extra_user_data:
                             extra_user_data = dict(user)
-                            extra_user_data.update(
-                                {"state": user_options.get("state", "present")})
+                            extra_user_data.update({"state": user_options.get("state", "present")})
 
                         extra_user_data.update({dic_key: user_options[dic_key]})
-                        user_options.pop(dic_key,
-                                         None)  # Remove item from user DB
+                        user_options.pop(dic_key, None)  # Remove item from user DB
                 # Add extras to a list if any
                 if extra_user_data:
                     self.extra_users_data.append(dict(extra_user_data))
@@ -272,8 +238,7 @@ class UsersDB(object):
             self.expanded_users_db.append(user)  # Populate new list user db
             self.expanded_users_key_db.append({"user": username, "keys": keys})
             if len(keys) > 0:
-                self.lookup_key_db.update(
-                    {username: keys})  # Populate dict key db
+                self.lookup_key_db.update({username: keys})  # Populate dict key db
 
     def main(self):
         self.expand_users()
