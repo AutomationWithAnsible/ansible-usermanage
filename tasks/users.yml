@@ -1,27 +1,5 @@
 ---
 
-- name: users | Compile list of selected users (if interactive passed)
-  set_fact:
-    usermanage_selected_users_temp_list="{{ usermanage_selected_users_temp_list + cuser.users_db | selectattr('name'| default('user'), 'equalto', item) | list }}"
-  with_items: usermanage_selected_users.split(',')
-  when: cuser.users_db is defined and usermanage_selected_users is defined
-
-- name: users | Set with items for users (if interactive passed)
-  set_fact:
-    usermanage_user_with_items="{{ usermanage_selected_users_temp_list }}"
-  when: cuser.users_db is defined and usermanage_selected_users is defined
-
-- name: users | Compile list of selected users key (if interactive passed)
-  set_fact:
-    usermanage_selected_key_temp_list="{{ usermanage_selected_key_temp_list + cuser.key_db | selectattr('user', 'equalto', item) | list }}"
-  with_items: usermanage_selected_users.split(',')
-  when: cuser.key_db is defined and usermanage_selected_users is defined 
-
-- name: users | Set with items for users key (if interactive passed)
-  set_fact:
-    usermanage_keys_with_items="{{ usermanage_selected_key_temp_list }}"
-  when: cuser.key_db is defined and usermanage_selected_users is defined
-
 - name: users | Ensure users are in required state
   user:
     append="{{ item.append | default('yes') }}"

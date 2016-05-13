@@ -1,9 +1,13 @@
 #!/usr/bin/python
 
-USERVALUES = [ 'append', 'comment', 'createhome', 'expires', 'force', 'generate_ssh_key', 'group', 'groups', 'home',
-               'login_class', 'move_home', 'name', 'non_unique', 'password', 'remove', 'seuser', 'shell', 'skeleton', 'ssh_key_bits',
-               'ssh_key_comment', 'ssh_key_file', 'ssh_key_passphrase', 'ssh_key_type', 'state', 'system', 'uid', 'update_password',
-               'keys']
+USERVALUES = ['append', 'comment', 'createhome', 'expires', 'force',
+              'generate_ssh_key', 'group', 'groups', 'home',
+              'login_class', 'move_home', 'name', 'non_unique', 'password',
+              'remove', 'seuser', 'shell', 'skeleton', 'ssh_key_bits',
+              'ssh_key_comment', 'ssh_key_file', 'ssh_key_passphrase',
+              'ssh_key_type', 'state', 'system', 'uid', 'update_password',
+              'keys']
+
 
 class UsersDB(object):
     def __init__(self, module):
@@ -11,6 +15,11 @@ class UsersDB(object):
         self.users_db = self.module.params["usersdb"]
         self.source_user_db = self.module.params["source_userdb"]
         self.extract_extra_keys = self.module.params["extract_extra_keys"]
+        self.selected_users = self.module.params["usermanage_selected_users"]
+
+        if self.selected_users:
+            self.selected_users = self.selected_users.split(',')
+
         # If we have to userdb and source db lets merge them if not
         if self.users_db and self.source_user_db:
             self.users_db.update(self.source_user_db)
@@ -21,16 +30,17 @@ class UsersDB(object):
 
         self.teams_db = self.module.params["teamsdb"]
         self.servers_db = self.module.params["serversdb"]
+
         # Databases
         self.lookup_key_db = {}  # used for quick lookup
         self.expanded_users_db = []  # Used in simple mode
         self.expanded_users_key_db = []  # Used in simple mode
         self.expanded_server_db = []  # Used in advanced mode for merged User + server
         self.expanded_server_key_db = []  # Used in advanced mode
-        self.extra_users_data = [] # Used for extra data that is not related to user module 
-        self.extra_server_data = [] # Used for extra data that is not related to user module for server mode
+        self.extra_users_data = []  # Used for extra data that is not related to user module
+        self.extra_server_data = []  # Used for extra data that is not related to user module for server mode
 
-    def _concat_keys(self, user_name, user_keys=None, server_keys=None, user_status=False):
+    def _concat_keys(self, user_keys=None, server_keys=None, user_status=False):
         # Concat keys (if possible) and update username to keys
         new_user_keys = []
         if user_keys and server_keys:
@@ -59,10 +69,12 @@ class UsersDB(object):
             pass
         return new_user_keys
 
-    def _merge_key(self, user_keys, sever_keys, user_name, user_status=False):
-        # Rules ( no real merge happens )
-        # 1- Default use the user key
-        # 2- if server has defined keys then use those instead no merge here
+    def _merge_key(self, user_keys, sever_keys, user_status=False):
+        """
+        Rules ( no real merge happens )
+        1- Default use the user key
+        2- if server has defined keys then use those instead no merge here
+        """
         if sever_keys:
             merged_keys = []
             for server_key in sever_keys:
@@ -72,18 +84,19 @@ class UsersDB(object):
                     user_definition = self.users_db.get(user, {})
                     if user_definition.get("state", "present") in ("absent", "delete", "deleted", "remove", "removed"):
                         user_status = "absent"
-                    merged_keys += self._concat_keys(user_name, account_key, server_key, user_status=user_status)
+                    merged_keys += self._concat_keys(user_keys=account_key, server_keys=server_key, user_status=user_status)
+
                 elif "team" in server_key:
                     self.module.fail_json(msg="Team key is not yet implemented")
                 elif "key" in server_key:
-                    merged_keys += self._concat_keys(user_name, server_keys=server_key, user_status=user_status)
+                    merged_keys += self._concat_keys(server_keys=server_key, user_status=user_status)
                 else:
                     # TODO: Should work without keys
                     # self.module.fail_json(msg="user '{}' list has no keys defined.".format(user_name))
                     pass
             return merged_keys
         else:
-            return self._concat_keys(user_name, user_keys=user_keys, user_status=user_status)
+            return self._concat_keys(user_keys=user_keys, user_status=user_status)
 
     def _merge_user(self, user_name, user_server):
         user_definition = self.users_db.get(user_name, False)
@@ -103,10 +116,11 @@ class UsersDB(object):
             merged_user.update({"state": "absent"})
         user_server = merged_user
         user_db_key = self.lookup_key_db.get(user_name, None)
-        user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_name, user_status)
+        user_server_keys = self._merge_key(user_db_key, user_server.get("keys", None), user_status)
+
         # In case of team user dict will not be defined so lets just define anyway
         user_server.update({"user": user_name})
-
+        user_server.update({"name": user_name})
         # Populate DBs
         user_server.pop("keys", None)  # Get rid of keys
         user_server.pop("team", None)  # Get rid of team if exists
@@ -116,39 +130,50 @@ class UsersDB(object):
 
     def expand_servers_extra(self, user_name):
         ## Add self.extra_server_data
-        extra_user_item = filter(lambda exta_user: exta_user['name'] == user_name,  self.extra_users_data )
+        extra_user_item = filter(lambda exta_user: exta_user['name'] == user_name, self.extra_users_data)
         # not empty than add
         if extra_user_item != []:
             # We make a good assumption that we only get one item :( which is somehow true but probably need to check it
             self.extra_server_data.append(dict(extra_user_item[0]))
 
     def expand_servers(self):
-        # Advanced mode Merges users and servers data
-        # Expand server will overwrite same attributes defined in user db except for state = "absent"
+        """
+        Advanced mode Merges users and servers data.
+        Expand server will overwrite same attributes defined in user db
+        except for state = "absent"
+        """
         for user_server in self.servers_db:
+
             team_name = user_server.get("team", False)
             user_name = user_server.get("user", False) or user_server.get("name", False)
 
             if user_name:
+                # Check if usermanage_selected_users is set, and exclude users
+                if self.selected_users:
+                    if user_name not in self.selected_users:
+                        continue
                 self._merge_user(user_name, user_server)
                 ## Add self.extra_server_data
                 if self.extract_extra_keys:
                     self.expand_servers_extra(user_name)
-                
+
             elif team_name:
                 team_definition = self.teams_db.get(team_name, False)
                 if not team_definition:
                     self.module.fail_json(msg="'%s' team has no definition" % team_name)
                 for user_in_team in team_definition:
+                    # Check if usermanage_selected_users is set, and exclude users
+                    if self.selected_users:
+                        if user_in_team not in self.selected_users:
+                            continue
                     ## Add self.extra_server_data
                     if self.extract_extra_keys:
                         self.expand_servers_extra(user_in_team)
                     self._merge_user(user_in_team, user_server)
             else:
-                self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. "
-                                          "for '{}'".format(user_server))
+                self.module.fail_json(msg="Your server definition has no user or team. Please check your data type. for '{}'".format(user_server))
 
-    def expand_keys(self, keys, user):
+    def expand_keys(self, keys):
         # if len(keys) == 0:
         #     # TODO: Should work without keys
         #     self.module.fail_json(msg="user '{}' has no keys defined.".format(user))
@@ -172,11 +197,21 @@ class UsersDB(object):
         return user_keys
 
     def expand_users(self):
-        # Get User database which is a dic and create expendaded_user_db and key_db
-        # Put keys in right dictionary format
+        """
+        Get User database which is a dic and create expendaded_user_db
+        and key_db. Put keys in right dictionary format
+        :return:
+        """
+
         for username, user_options in self.users_db.iteritems():
+
+            # Check if usermanage_selected_users is set, and exclude users
+            if self.selected_users:
+                if username not in self.selected_users:
+                    continue
+
             user = {"name": username}  # create the account name
-            
+
             # 1-  Check for extra keys that dont translate to ansible user module
             if self.extract_extra_keys:
                 extra_user_data = None
@@ -184,11 +219,11 @@ class UsersDB(object):
                     if dic_key not in USERVALUES:
                         # Add user and state
                         if not extra_user_data:
-                             extra_user_data = dict(user)
-                             extra_user_data.update({ "state": user_options.get("state", "present")})
+                            extra_user_data = dict(user)
+                            extra_user_data.update({"state": user_options.get("state", "present")})
 
-                        extra_user_data.update({ dic_key: user_options[dic_key] })    
-                        user_options.pop(dic_key, None) # Remove item from user DB
+                        extra_user_data.update({dic_key: user_options[dic_key]})
+                        user_options.pop(dic_key, None)  # Remove item from user DB
                 # Add extras to a list if any
                 if extra_user_data:
                     self.extra_users_data.append(dict(extra_user_data))
@@ -196,7 +231,7 @@ class UsersDB(object):
             user.update(user_options)  # update all other option
             # 3- Compile key
             unformatted_keys = user_options.get("keys", [])
-            keys = self.expand_keys(unformatted_keys, user)
+            keys = self.expand_keys(unformatted_keys)
             # 4- remove keys from userdb if exists
             user.pop("keys", None)
             # 5- Populate DBs
@@ -216,7 +251,7 @@ class UsersDB(object):
                       "key_db": self.expanded_server_key_db}
             # Add extras if options for servers
             if self.extract_extra_keys:
-                result.update({ "extra" : self.extra_server_data })
+                result.update({"extra": self.extra_server_data})
         else:
             # Simple mode no servers db
             result = {"changed": False, "msg": "",
@@ -224,7 +259,7 @@ class UsersDB(object):
                       "key_db": self.expanded_users_key_db}
             # Add extras if options
             if self.extract_extra_keys:
-                result.update({ "extra" : self.extra_users_data })
+                result.update({"extra": self.extra_users_data})
 
         self.module.exit_json(**result)
 
@@ -234,14 +269,17 @@ def main():
         argument_spec=dict(
             usersdb=dict(default=None, required=False, type="dict"),
             source_userdb=dict(default=None, required=False, type="dict"),
-            teamsdb=dict(default=None, required=False),  # Should be dict but would break if value is false/none
+            teamsdb=dict(default=None, required=False), # Should be dict but would break if value is false/none
             serversdb=dict(default=None, required=False),
             extract_extra_keys=dict(default=True, required=False),
+            usermanage_selected_users=dict(default=None, required=False),
         ),
         supports_check_mode=False
     )
     UsersDB(module).main()
 
+
 # import module snippets
 from ansible.module_utils.basic import *
+
 main()
