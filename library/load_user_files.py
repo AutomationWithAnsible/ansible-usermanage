@@ -146,9 +146,7 @@ def main():
         ),
         supports_check_mode=False
     )
-    if not ansible_client_found:
-        module.fail_json(msg="Ansible is not installed or ansible python library is not in path. Can't import 'ansible.utils '")
-    
+
     if not yaml_found:
         module.fail_json(msg="Python YAML module can't be imported, Please install it or check your python lib path")
 
@@ -156,11 +154,7 @@ def main():
 
 
 # import module snippets
-try:
-    from ansible.module_utils.basic import *
-    ansible_client_found = True
-except ImportError:
-    ansible_client_found = False
+from ansible.module_utils.basic import *
 
 try:
     import yaml
