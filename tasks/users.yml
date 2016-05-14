@@ -44,7 +44,7 @@
     validate_certs="{{ item.1.validate_certs | default(omit) }}"
   with_subelements:
       - "{{ usermanage_keys_with_items }}"
-      - "{{ keys }}"
+      - "keys"
   register: keyrc
   failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
   when: cuser.key_db is defined
