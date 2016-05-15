@@ -7,6 +7,7 @@
     fact: "{{ usermanage_source_facts }}"
     databag: "{{ usermanage_user_source_databag }}"
   register: loaded_users_db
+  delegate_to: localhost
   connection: local
   become: no
   when: usermanage_user_source_files is defined and usermanage_user_source_files is not none
@@ -19,6 +20,7 @@
     source_userdb: "{{ loaded_users_db[usermanage_source_facts] | default(omit) }}"
     usermanage_selected_users: "{{ usermanage_selected_users | default(omit) }}"
   register: cuser
+  delegate_to: localhost
   connection: local
   become: no
   when: usermanage_usersdb is defined or loaded_users_db[usermanage_source_facts] is defined
