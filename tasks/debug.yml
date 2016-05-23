@@ -32,7 +32,7 @@
   template:
      src=debug_users.j2
      dest="{{ usermanage_debug_dir }}/{{ inventory_hostname }}-{{ item.user | default(item.name) }}"
-  with_items: cuser.users_db
+  with_items: "{{ cuser.users_db }}"
   when: usermanage_debug_level >= 1
 
 - name: debug | Debug usermanage_groupsdb

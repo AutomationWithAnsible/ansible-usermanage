@@ -55,6 +55,6 @@
      dest="{{ item.home | default(usermanage_default_home_dir_prefix + "/" + item.user ) }}/{{ usermanage_priv_key_suffix}}"
      mode=0600
      owner="{{ item.user }}"
-  with_items: usermanage_users_privkey
+  with_items: "{{ usermanage_users_privkey | default([]) }}"
   when: usermanage_users_privkey is defined
   no_log: True
