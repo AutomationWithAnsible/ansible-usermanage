@@ -7,5 +7,6 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - precise
+    - trusty
   categories:
     - system
