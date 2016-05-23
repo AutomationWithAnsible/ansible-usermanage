@@ -6,4 +6,4 @@
     name="{{ item.name }}"
     state="{{ item.state | default(omit) }}"
     system="{{ item.system | default(omit) }}"
-  with_items: cuser.users_db
+  with_items: "{{ cuser.users_db }}"
