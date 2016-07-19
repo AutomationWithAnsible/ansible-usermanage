@@ -269,8 +269,8 @@ def main():
         argument_spec=dict(
             usersdb=dict(default=None, required=False, type="dict"),
             source_userdb=dict(default=None, required=False, type="dict"),
-            teamsdb=dict(default=None, required=False), # Should be dict but would break if value is false/none
-            serversdb=dict(default=None, required=False),
+            teamsdb=dict(default=None, required=False, type="dict"),
+            serversdb=dict(default=None, required=False, type="list"),
             extract_extra_keys=dict(default=True, required=False),
             usermanage_selected_users=dict(default=None, required=False),
         ),

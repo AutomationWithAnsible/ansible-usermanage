@@ -1,4 +1,4 @@
 .kitchen/
 .kitchen.local.yml
 test/ansible_output
-Gemfile.lock
+*.retry
