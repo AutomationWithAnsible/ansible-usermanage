@@ -14,3 +14,8 @@
 
   roles        :
                  - "ansible-usermanage"
+
+  post_tasks   :
+     - name: Local
+       command: test -e /usr/bin/apt-get || sudo apt-get install language-pack-en; locale-gen en_US.UTF-8
+       changed_when: false
