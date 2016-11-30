@@ -28,5 +28,5 @@
          dest="/tmp/extra_advanced_team_db.yaml"
 
      - name: Local
-       command: test -e /usr/bin/apt-get || sudo apt-get install language-pack-en; locale-gen en_US.UTF-8
+       shell: test -e /usr/bin/apt-get || sudo apt-get install language-pack-en; locale-gen en_US.UTF-8
        changed_when: false

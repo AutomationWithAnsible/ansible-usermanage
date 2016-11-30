@@ -26,4 +26,6 @@
        copy:
          content="{{ cuser.extra | to_nice_json }}"
          dest="/tmp/extra_advanced_extra_db.yaml"
-
+     - name: Local
+       shell: test -e /usr/bin/apt-get || sudo apt-get install language-pack-en; locale-gen en_US.UTF-8
+       changed_when: false
