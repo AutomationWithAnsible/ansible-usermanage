@@ -32,6 +32,9 @@ end
 
 ## Load files from remote machine
 reg_selected_users_key_vars = cat_remote_file("/tmp/reg_selected_users_key_vars.yaml")
+puts " "
+puts reg_selected_users_key_vars
+puts  " "
 reg_selected_users_vars = cat_remote_file("/tmp/reg_selected_users_vars.yaml")
 
 describe "Database match for selected " do
