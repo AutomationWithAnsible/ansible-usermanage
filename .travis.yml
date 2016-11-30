@@ -21,8 +21,9 @@ install:
 
 script:
     - ansible --version
+    - sudo locale-gen en_US.UTF-8
     - bundle show
-    - bundle exec kitchen test ${KITCHEN_TEST}
+    - LANG=en_US.UTF-8 bundle exec kitchen test ${KITCHEN_TEST}
 
 after_success:
     - echo "Success"
