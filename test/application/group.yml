@@ -3,8 +3,11 @@
   hosts        : "all"
   gather_facts : no
   become       : True
-  connection   : "{{ kitchen_connection | default('local') }}"
   vars_files   :
                  - "group_var_group_db.yml"
+  pre_tasks:
+    - name: install python 2
+      raw: test -e /usr/bin/python || (sudo apt -y -qq update && sudo apt install -y -qq python-minimal)
+      changed_when: False
   roles        :
                  - "ansible-usermanage"

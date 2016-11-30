@@ -1,37 +1,59 @@
+
 ---
 driver                    :
-    name                  : <%= if ENV['TRAVIS'] then 'localhost' else 'vagrant' end  %>
-    box                   : "ubuntu/trusty64"
-    customize             :
-         cpus             : 2
-         memory           : 2048 
+    name                  : docker
+    socket                : unix:///var/run/docker.sock
+    use_sudo              : false
 
-provisioner:
+provisioner               :
     name                  : ansible_push
-    verbose               : "vvvv"
+    #verbose               : "vvvv"
+    chef_bootstrap_url    : nil
     ansible_config        : "test/ansible.cfg"
     idempotency_test      : True
-    sudo                  : <%= if ENV['TRAVIS'] then 'True' else 'False' end  %>
-    raw_arguments         : <%= if ENV['TRAVIS'] then '-c local' else '' end %>
-    extra_vars            : { 'kitchen_connection': '<%= if ENV["TRAVIS"] then "local" else "smart" end %>', 'kitchen_hosts': '<%= if ENV["TRAVIS"] then "localhost" else "all" end %>' }
+    diff                  : True
+
+verifier                  :
+  name                    : serverspec
+  remote_exec             : false
+  default_pattern         : true
+
 
 platforms:
- - name                   : ubuntu-v1
+ - name                   : ubuntu14.04-v2.0
    provisioner            :
-     ansible_playbook_bin : "$(ansible-version path v1)ansible-playbook"
-
- - name                   : ubuntu-v2
-   provisioner            :
-     ansible_playbook_bin : "$(ansible-version path v2)ansible-playbook"
-
- - name                   : docker-u14-v2
-   provisioner            :
-     ansible_playbook_bin : "$(ansible-version path v2)ansible-playbook"
+     ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
    driver_config          :
-     image                : quay.io/hellofresh/kitchen-base
+     image                : ubuntu:14.04
      platform             : ubuntu
-   driver                 :
-    name                  : docker
+
+ - name                   : ubuntu16.04-v2.0
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
+   driver_config          :
+     image                : ubuntu:16.04
+     platform             : ubuntu
+
+ - name                   : ubuntu14.04-v2.2
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+   driver_config          :
+     image                : ubuntu:14.04
+     platform             : ubuntu
+
+ - name                   : ubuntu16.04-v2.2
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+   driver_config          :
+     image                : ubuntu:16.04
+     platform             : ubuntu
+
+ - name                   : centos7-v2.2
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+   driver_config          :
+     image                : centos:7
+     platform             : centos
 
 suites:
   - name                  : group
@@ -76,4 +98,4 @@ suites:
 
   - name                  : extra-team
     provisioner           :
-        playbook          : "test/application/extra_team.yml"       
+        playbook          : "test/application/extra_team.yml"

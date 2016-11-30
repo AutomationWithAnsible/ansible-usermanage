@@ -1,7 +1,4 @@
-require 'serverspec'
-
-# Required by serverspec
-set :backend, :exec
+require_relative '../../helper_spec.rb'
 
 describe user('bbreezer') do
   it { should_not exist }

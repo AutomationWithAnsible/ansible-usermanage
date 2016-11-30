@@ -47,3 +47,8 @@ usermanage_usersdb:
       - key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+CDl3fAHWGS++kVXsWIGkh9yAaO9Nv4XbVX0CsCzIxRd85HS/uOCp5SUtjvTzVjOJu+GKfoNuYwMyGKAJprITVU/lPl9czMySz70BqxDn3yhELWC9GRq+EuZEWasV6xbEeSaUTA0S6614ciBoXSYC7WGYJhnUv59b+yHnQBT7ZDN6MYSWBA9UDFZWE90BxzzjYzJpxY80KOqmfXrMEMbjK31L8dCLHmVKGIYsOJkswLPN7kkxeZxxIpBwo3D9SUYels7sOzXb/G83hxj6NfTVkzcut9GsiQxAPt92RsoMbLqDv6QcwABo4MdOw7wDieoP8I5ftqq76q+GTangM7Sj dev1"
   tool:
     state: "present"
+
+usermanage_groupsdb  :
+      - name         : "sudo"
+        state        : "present"
+        system       : "true"
