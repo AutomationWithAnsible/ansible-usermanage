@@ -17,8 +17,8 @@
   post_tasks   :
      - name: Local
        command: locale-gen en_US.UTF-8
-       changed_when: false
        when: "{{ ansible_distribution == 'Ubuntu' }}"
+      changed_when: false
 
      - name: Print the user db in a yaml file
        copy:
