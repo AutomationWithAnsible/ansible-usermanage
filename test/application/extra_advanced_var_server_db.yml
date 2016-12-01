@@ -29,3 +29,8 @@ usermanage_servers:
       - user        : tool
         groups      : 'ops,lp'
         state       : 'present'
+
+usermanage_groupsdb  :
+      - name         : "sudo"
+        state        : "present"
+        system       : "true"
