@@ -27,5 +27,5 @@
          dest="/tmp/extra_simple_extra_db.yaml"
 
      - name: Local
-       shell: test -e /usr/bin/apt-get || sudo apt-get install language-pack-en; locale-gen en_US.UTF-8
+       shell: test -e /usr/bin/apt-get && sudo apt-get install language-pack-en -y && locale-gen en_US.UTF-8 || exit 0
        changed_when: false
