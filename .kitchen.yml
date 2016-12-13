@@ -55,6 +55,17 @@ platforms:
      image                : centos:7
      platform             : centos
 
+ - name                   : alpine-v2.2
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+   driver_config          :
+     image                : alpine:edge
+     platform             : alpine
+     provision_command    :
+       - apk add sudo python shadow
+       - mkdir -p /opt
+       #
+
 suites:
   - name                  : group
     provisioner           :

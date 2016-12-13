@@ -54,7 +54,7 @@ usermanage_usersdb:
   tool:
     state: "present"
     zendesk: True
-    zendesk_options: 
+    zendesk_options:
       group : Admin
   pepsi:
     comment: "Pepsi"
