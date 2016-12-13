@@ -8,6 +8,7 @@ env:
   - KITCHEN_TEST="ubuntu1404"
   - KITCHEN_TEST="ubuntu1604"
   - KITCHEN_TEST="centos7"
+  - KITCHEN_TEST="alpine"
 
 before_install:
   # Make sure everything's up to date.
