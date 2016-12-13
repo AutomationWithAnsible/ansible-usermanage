@@ -17,7 +17,7 @@ usermanage_servers:
                state       : 'present'
 
       - user        : "dev"
-        groups      : 'ops,lp'
+        groups      : 'devops,lp'
         state       : 'present'
         shell       : '/bin/false'
         keys        :
@@ -27,10 +27,14 @@ usermanage_servers:
              - user        : 'raki'  # should be not there
                state       : 'present'
       - user        : tool
-        groups      : 'ops,lp'
+        groups      : 'devops,lp'
         state       : 'present'
 
 usermanage_groupsdb  :
       - name         : "sudo"
+        state        : "present"
+        system       : "true"
+
+      - name         : "devops"
         state        : "present"
         system       : "true"

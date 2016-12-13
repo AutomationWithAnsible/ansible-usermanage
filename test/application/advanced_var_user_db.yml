@@ -52,3 +52,10 @@ usermanage_groupsdb  :
       - name         : "sudo"
         state        : "present"
         system       : "true"
+
+      - name         : "superops"
+        state        : "present"
+
+      # - name         : "lp"
+      #   state        : "present"
+      #   system       : "true"
