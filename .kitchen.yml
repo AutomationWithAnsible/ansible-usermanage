@@ -59,12 +59,11 @@ platforms:
    provisioner            :
      ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
    driver_config          :
-     image                : alpine:edge
+     image                : alpine:3.4
      platform             : alpine
      provision_command    :
-       - apk add sudo python shadow
-       - mkdir -p /opt
-       #
+                             - apk add python shadow
+                             - mkdir -p /opt
 
 suites:
   - name                  : group

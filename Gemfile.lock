@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/ahelal/kitchen-docker.git
-  revision: 2821d40cf2c108dac5d03b95b0a56c3d4efe063f
+  revision: 12552cc580393108e67ba9f933a8730b3ab0187f
   branch: feature/alpine
   specs:
     kitchen-docker (2.6.1.pre)
