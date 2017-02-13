@@ -1,5 +1,9 @@
 ---
 
+- include: include-vars.yml
+  when: usermanage_include_vars
+  tags: usermanage_include_vars
+
 - include: sources.yml
   when: usermanage_compile_sources_only or not usermanage_compile_sources_only
   tags: sources

@@ -6,6 +6,10 @@
 #usermanage_teamsdb                          :
 #usermanage_groupsdb                         :
 ###
+
+usermanage_include_vars                     : False # A list of file paths to include
+usermanage_include_vars_type                : "file"
+
 usermanage_user_source_files                :       # if you want to include a yaml&json/json file or chef databag
 usermanage_user_source_databag              : false # Is this user_source opscode chef user databag
 usermanage_default_home_dir_prefix          : "/home" ## TODO: not working yet
