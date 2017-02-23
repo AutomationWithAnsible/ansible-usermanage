@@ -4,3 +4,9 @@
   include_vars: "{{ item }}"
   with_items: "{{ usermanage_include_vars }}"
   when: "{{ usermanage_include_vars_type == 'file' }}"
+
+- name: include-vars | Include flatfiles in a directory as variables
+  include_vars: dir="{{ item }}"
+  with_items: "{{ usermanage_include_vars }}"
+  when: "{{ usermanage_include_vars_type == 'dir' }}"
+
