@@ -3,7 +3,7 @@
 - name: include-vars | Include flatfiles as variables
   include_vars: "{{ item }}"
   with_items: "{{ usermanage_include_vars }}"
-  when: "{{ usermanage_include_vars_type == 'file' }}"
+  when: "{{ usermanage_include_vars_type == 'file' and ansible_version >= '2.2.0.0' }}"
 
 - name: include-vars | Include flatfiles in a directory as variables
   include_vars: dir="{{ item }}"
