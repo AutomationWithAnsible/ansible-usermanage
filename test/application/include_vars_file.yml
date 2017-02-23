@@ -5,7 +5,8 @@
   become       : True
   vars         :
                  usermanage_debug : true
-                 usermanage_include_vars : "include_vars_file_user_db.yml"
+                 usermanage_include_vars : 
+                   - "include_vars_file_user_db.yml"
   pre_tasks:
     - name: install python 2
       raw: test -e /usr/bin/python || (sudo apt -y -qq update && sudo apt install -y -qq python-minimal)
