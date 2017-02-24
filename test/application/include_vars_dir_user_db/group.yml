@@ -1,0 +1,6 @@
+---
+
+usermanage_groupsdb  :
+      - name         : "group1"
+      - name         : "group2"
+      - name         : "group3"

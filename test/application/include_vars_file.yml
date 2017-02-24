@@ -1,0 +1,21 @@
+---
+- name         : Include file 
+  hosts        : "all"
+  gather_facts : no
+  become       : True
+  vars         :
+                 usermanage_debug : true
+                 usermanage_include_vars : 
+                   - "include_vars_file_user_db.yml"
+  pre_tasks:
+    - name: install python 2
+      raw: test -e /usr/bin/python || (sudo apt -y -qq update && sudo apt install -y -qq python-minimal)
+      changed_when: False
+
+  roles        :
+                 - "ansible-usermanage"
+
+  post_tasks   :
+     - name: Local
+       shell: test -e /usr/bin/apt-get && sudo apt-get install language-pack-en -y && locale-gen en_US.UTF-8 || exit 0
+       changed_when: false
