@@ -3,7 +3,7 @@ require_relative '../../helper_spec.rb'
 ansible_version=`ansible --version`
 
 puts "ANSIBLE_VERSION=", ansible_version
-puts "AND THE THING IS=", ansible_version[/ansible 2.[01]./,].nil?puts
+puts "AND THE THING IS=", ansible_version[/ansible 2.[01]./,].nil?
 
 unless ansible_version[/ansible 2.[01]./,].nil?
 
