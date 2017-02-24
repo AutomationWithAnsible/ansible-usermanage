@@ -23,6 +23,7 @@ platforms:
  - name                   : ubuntu14.04-v2.0
    provisioner            :
      ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
+
    driver_config          :
      image                : ubuntu:14.04
      platform             : ubuntu
@@ -110,12 +111,10 @@ suites:
     provisioner           :
         playbook          : "test/application/extra_team.yml"
 
-  - name                  : include-vars-file 
+  - name                  : include-vars-file
     provisioner           :
         playbook          : "test/application/include_vars_file.yml"
 
   - name                  : include-vars-dir
     provisioner           :
         playbook          : "test/application/include_vars_dir.yml"
-
-
