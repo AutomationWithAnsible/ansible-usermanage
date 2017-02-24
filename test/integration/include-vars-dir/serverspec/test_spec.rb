@@ -2,9 +2,6 @@ require_relative '../../helper_spec.rb'
 
 ansible_version=`ansible --version`
 
-puts "ANSIBLE_VERSION=", ansible_version
-puts "AND THE THING IS=", ansible_version[/ansible 2.[01]./,].nil?
-
 if ansible_version[/ansible 2.[01]./,].nil?
 
   describe group('group1') do
