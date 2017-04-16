@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 class LoadVarDir(object):
     def __init__(self, module):

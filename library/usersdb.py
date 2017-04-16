@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 USERVALUES = ['append', 'comment', 'createhome', 'expires', 'force',
               'generate_ssh_key', 'group', 'groups', 'home',
