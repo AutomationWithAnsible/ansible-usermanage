@@ -46,7 +46,7 @@
       - "{{ usermanage_keys_with_items }}"
       - keys
   register: keyrc
-  failed_when: "'failed' in keyrc and 'getpwnam' not in keyrc.msg"
+  failed_when: "keyrc is failed and 'getpwnam' not in keyrc.msg"
   when: cuser.key_db is defined
 
 - name: users | Manage private key for users
