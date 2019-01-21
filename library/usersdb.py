@@ -203,7 +203,7 @@ class UsersDB(object):
         :return:
         """
 
-        for username, user_options in self.users_db.iteritems():
+        for username, user_options in self.users_db.items():
 
             # Check if usermanage_selected_users is set, and exclude users
             if self.selected_users:
@@ -215,7 +215,8 @@ class UsersDB(object):
             # 1-  Check for extra keys that dont translate to ansible user module
             if self.extract_extra_keys:
                 extra_user_data = None
-                for dic_key in user_options.keys():
+                user_options_keys = list(user_options.keys())
+                for dic_key in user_options_keys:
                     if dic_key not in USERVALUES:
                         # Add user and state
                         if not extra_user_data:

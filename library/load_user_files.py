@@ -86,7 +86,7 @@ class LoadVarDir(object):
                     new_data.update({ansible_key: data_bag_item_value})
 
             if self.extract_extra_keys:
-                for key, value in data.iteritems():
+                for key, value in data.items():
                     new_data.update({key: value})
             # Check for an action
             chef_action = new_data.get("state", False)
